@@ -35,8 +35,9 @@
         "typescript": "^3.9.7"
     },
     "dependencies": {
-        "axios": "^0.19.2",
+        "@types/node-fetch": "^2.5.7",
         "dotenv": "^8.2.0",
+        "node-fetch": "^2.6.0",
         "parse-link-header": "^1.0.1"
     }
 }

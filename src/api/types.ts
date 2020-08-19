@@ -7,15 +7,31 @@ export type ContentTypeString = string;
 export type MIMETypeString = string;
 
 
-export interface API<U extends string, M extends HTTPMethod, P, R> {
-  url: U,
+export interface API<
+  U extends string,
+  UP extends (string | number)[],
+  M extends HTTPMethod,
+  P,
+  R> {
+  // api endpoint
+  uri: U,
+
+  // exists only when the endpoint requires parameters.
+  uriParams?: UP,
+
+  // HTTP method
   method: M,
+
+  // parameters for GET, or body for POST
   param: P,
+
+  // response type.
   response: R,
 };
 
 export type APIKey =
-  | "url"
+  | "uri"
+  | "uriParams"
   | "method"
   | "param"
   | "response";
@@ -691,6 +707,217 @@ namespace ResponseType {
     url: URLString
   }
 
+  export interface DiscussinoTopic {
+    // A discussion topic
+    // The ID of this topic.
+    id: number,
+
+    // The topic title.
+    title: string,
+
+    // The HTML content of the message body.
+    message: HTMLString,
+
+    // The URL to the discussion topic in canvas.
+    html_url: URLString,
+
+    // The datetime the topic was posted. If it is null it hasn't been posted yet.
+    // (see delayed_post_at)
+    posted_at: DateString,
+
+    // The datetime for when the last reply was in the topic.
+    last_reply_at: DateString,
+
+    // If true then a user may not respond to other replies until that user has made
+    // an initial reply. Defaults to false.
+    require_initial_post: boolean,
+
+    // Whether or not posts in this topic are visible to the user.
+    user_can_see_posts: boolean,
+
+    // The count of entries in the topic.
+    discussion_subentry_count: number,
+
+    // The read_state of the topic for the current user, 'read' or 'unread'.
+    read_state: "read" | "unread",
+
+    // The count of unread entries of this topic for the current user.
+    unread_count: number,
+
+    // Whether or not the current user is subscribed to this topic.
+    subscribed: boolean,
+
+    // (Optional) Why the user cannot subscribe to this topic. Only one reason will
+    // be returned even if multiple apply. Can be one of: 'initial_post_required':
+    // The user must post a reply first; 'not_in_group_set': The user is not in the
+    // group set for this graded group discussion; 'not_in_group': The user is not
+    // in this topic's group; 'topic_is_announcement': This topic is an announcement
+    subscription_hold?:
+    | "initial_post_required"
+    | "not_in_group_set"
+    | "not_in_group"
+    | "topic_is_announcement",
+
+    // The unique identifier of the assignment if the topic is for grading,
+    // otherwise null.
+    assignment_id?: number,
+
+    // The datetime to publish the topic (if not right away).
+    delayed_post_at?: DateString,
+
+    // Whether this discussion topic is published (true) or draft state (false)
+    published: boolean,
+
+    // The datetime to lock the topic (if ever).
+    lock_at?: DateString,
+
+    // Whether or not the discussion is 'closed for comments'.
+    locked: boolean,
+
+    // Whether or not the discussion has been 'pinned' by an instructor
+    pinned: boolean,
+
+    // Whether or not this is locked for the user.
+    locked_for_user: boolean,
+
+    // (Optional) Information for the user about the lock. Present when
+    // locked_for_user is true.
+    lock_info?: boolean,
+
+    // (Optional) An explanation of why this is locked for the user. Present when
+    // locked_for_user is true.
+    lock_explanation?: string,
+
+    // The username of the topic creator.
+    user_name: string,
+
+    // DEPRECATED An array of topic_ids for the group discussions the user is a part
+    // of.
+    topic_children: number[],
+
+    // An array of group discussions the user is a part of. Fields include: id,
+    // group_id
+    group_topic_children: {id: number, group_id: number}[],
+
+    // If the topic is for grading and a group assignment this will point to the
+    // original topic in the course.
+    //
+    root_topic_id?: number,
+    // If the topic is a podcast topic this is the feed url for the current user.
+    //
+    podcast_url?: URLString,
+    // The type of discussion. Values are 'side_comment', for discussions that only
+    // allow one level of nested comments, and 'threaded' for fully threaded
+    // discussions.
+    discussion_type: "side_comment" | "threaded",
+
+    // The unique identifier of the group category if the topic is a group
+    // discussion, otherwise null.
+    group_category_id?: number,
+
+    // Array of file attachments.
+    attachments?: FileAttachment[],
+
+    // The current user's permissions on this topic.
+    permissions: {attach: boolean},
+
+    // Whether or not users can rate entries in this topic.
+    allow_rating: boolean,
+
+    // Whether or not grade permissions are required to rate entries.
+    only_graders_can_rate: boolean,
+
+    // Whether or not entries should be sorted by rating.
+    sort_by_rating: boolean
+  }
+
+  export interface FileAttachment {
+    "content-type": string,
+    url: URLString,
+    filename: FileNameString,
+    display_name: FileNameString
+  }
+
+  export interface Conversation {
+    // the unique identifier for the conversation.
+    id: number,
+
+    // the subject of the conversation.
+    subject: string,
+
+    // The current state of the conversation (read, unread or archived).
+    workflow_state: "unread" | "read" | "archived",
+
+    // A <=100 character preview from the most recent message.
+    last_message: string,
+
+    // the date and time at which the last message was sent.
+    start_at: DateString,
+
+    // the number of messages in the conversation.
+    message_count: number,
+
+    // whether the current user is subscribed to the conversation.
+    subscribed: boolean,
+
+    // whether the conversation is private.
+    private: boolean,
+
+    // whether the conversation is starred.
+    starred: boolean,
+
+    // Additional conversation flags (last_author, attachments, media_objects). Each
+    // listed property means the flag is set to true (i.e. the current user is the
+    // most recent author, there are attachments, or there are media objects)
+    properties?: "last_author" | "attachments" | "media_objects",
+
+    // Array of user ids who are involved in the conversation, ordered by
+    // participation level, then alphabetical. Excludes current user, unless this is
+    // a monologue.
+    audience?: number[],
+
+    // Most relevant shared contexts (courses and groups) between current user and
+    // other participants. If there is only one participant, it will also include
+    // that user's enrollment(s)/ membership type(s) in each course/group.
+    audience_contexts: {
+      courses: {
+        [id: string]: string[]
+      },
+      groups: {
+        [id: string]: string[]
+      }
+    },
+
+    // URL to appropriate icon for this conversation (custom, individual or group
+    // avatar, depending onaudience).
+    avatar_url: URLString,
+
+    // Array of users participating in the conversation. Includes current user.
+    participants?: ConversationParticipant[],
+
+    // indicates whether the conversation is visible under the current scope and
+    // filter. This attribute is always true in the index API response, and is
+    // primarily useful in create/update responses so that you can know if the
+    // record should be displayed in the UI. The default scope is assumed, unless a
+    // scope or filter is passed to the create/update API call.
+    visible: boolean,
+
+    // Name of the course or group in which the conversation is occurring.
+    context_name: string
+  }
+
+  export interface ConversationParticipant {
+    // The user ID for the participant.
+    id: number,
+    // A short name the user has selected, for use in conversations or other less
+    // formal places through the site.
+    name: string,
+    // The full name of the user.
+    full_name: string,
+    // If requested, this field will be included and contain a url to retrieve the
+    // user's avatar.
+    avatar_url?: URLString
+  }
 }
 
 
@@ -699,30 +926,35 @@ namespace ResponseType {
 export namespace AccountAPI {
   export type Acounts = API<
     "/api/v1/accounts",
+    [],
     "GET",
     Partial<{include: ("lti_guid" | "registration_settings" | "services")[]}>,
     ResponseType.Account[]>;
 
   export type CourseAccounts = API<
     "/api/v1/course_accounts",
+    [],
     "GET",
     null,
     ResponseType.Account[]>;
 
   export type AccountId = API<
     "/api/v1/accounts/:id",
+    [number],
     "GET",
     null,
     ResponseType.Account>;
 
   export type AccountPermissions = API<
     "/api/v1/accounts/:account_id/permissions",
+    [number],
     "GET",
     Partial<{permissions: string[]}>,
     {manage_account_memberships: boolean, become_user: boolean}>;
 
   export type SubAccount = API<
     "/api/v1/accounts/:account_id/sub_accounts",
+    [number],
     "GET",
     Partial<{recursive: boolean}>,
     ResponseType.Account[]
@@ -730,12 +962,14 @@ export namespace AccountAPI {
 
   export type TermOfService = API<
     "/api/v1/accounts/:account_id/terms_of_service",
+    [number],
     "GET",
     null,
     ResponseType.TermOfService
   >;
   export type AllCourseInAccount = API<
     "/api/v1/accounts/:account_id/courses",
+    [number],
     "GET",
     Partial<{
       with_enrollments: boolean,
@@ -775,6 +1009,7 @@ export namespace AccountAPI {
 
   export type UpdateAccount = API<
     "/api/v1/accounts/:id",
+    [string],
     "PUT",
     {
       account: Partial<{
@@ -821,12 +1056,14 @@ export namespace AccountAPI {
 
   export type DeleteAccountFromRootAccount = API<
     "/api/v1/accounts/:account_id/users/:user_id",
+    [number, number],
     "DELETE",
     null,
     ResponseType.User>;
 
   export type CreateNewSubAccount = API<
     "/api/v1/accounts/:account_id/sub_accounts",
+    [number],
     "POST",
     {
       account: {
@@ -841,6 +1078,7 @@ export namespace AccountAPI {
 
   export type DeleteSubAccount = API<
     "/api/v1/accounts/:account_id/sub_accounts/:id",
+    [number, number],
     "DELETE",
     null,
     ResponseType.Account>;
@@ -852,18 +1090,21 @@ export namespace FilesAPI {
   export namespace Quota {
     export type GetCourseQuota = API<
       "/api/v1/courses/:course_id/files/quota",
+      [number],
       "GET",
       null,
       {quota: number, quota_used: number}>;
 
     export type GetGroupQuota = API<
       "/api/v1/groups/:group_id/files/quota",
+      [number],
       "GET",
       null,
       {quota: number, quota_used: number}>;
 
     export type GetUserQuota = API<
       "/api/v1/users/:user_id/files/quota",
+      [number],
       "GET",
       null,
       {quota: number, quota_used: number}>;
@@ -888,24 +1129,28 @@ export namespace FilesAPI {
 
     export type GetCourseList = API<
       "/api/v1/courses/:course_id/files",
+      [number],
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
 
     export type GetUserList = API<
       "/api/v1/users/:user_id/files",
+      [number],
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
 
     export type GetGroupList = API<
       "/api/v1/groups/:group_id/files",
+      [number],
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
 
     export type GetFolderList = API<
       "/api/v1/folders/:id/files",
+      [number],
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
@@ -914,30 +1159,35 @@ export namespace FilesAPI {
   export namespace GetFile {
     export type typeGetFile = API<
       "/api/v1/files/:id",
+      [number],
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
     export type typeGetFilePost = API<
       "/api/v1/files/:id",
+      [number],
       "POST",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
     export type typeGetCourseFile = API<
       "/api/v1/courses/:course_id/files/:id",
+      [number, number],
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
     export type typeGetGroupFile = API<
       "/api/v1/groups/:group_id/files/:id",
+      [number, number],
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
     export type typeGetUserFile = API<
       "/api/v1/users/:user_id/files/:id",
+      [number, number],
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
@@ -945,6 +1195,7 @@ export namespace FilesAPI {
 
   export type UpateFile = API<
     "/api/v1/files/:id",
+    [number],
     "PUT",
     Partial<{
       name: string,
@@ -959,10 +1210,86 @@ export namespace FilesAPI {
 
   export type DeleteFile = API<
     "/api/v1/files/:id",
+    [number],
     "DELETE",
     Partial<{replace: boolean}>,
     ResponseType.File>;
-
 }
 
 
+// https://canvas.instructure.com/doc/api/announcements.html
+export namespace AnnouncementsAPI {
+  export type ListAnnoutcements = API<
+    "/api/v1/announcements",
+    [],
+    "GET",
+    {context_codes: string[]}
+    & Partial<{
+      // yyyy-mm-dd or YYYY-MM-DDTHH:MM:SSZ
+      start_date: DateString,
+
+      end_date: DateString,
+
+      active_only: boolean,
+
+      include: ("sections" | "sections_user_count")[]
+
+    }>,
+    ResponseType.DiscussinoTopic>;
+}
+
+export namespace ConversationsAPI {
+  export type ListConversations = API<
+    "/api/v1/conversations",
+    [],
+    "GET",
+    Partial<{
+      scope: "unread" | "starred" | "archived",
+      files: string[],
+      filter_mode: "and" | "or" | "default or",
+      interleave_submissions: boolean,
+      include_all_conversation_ids: boolean,
+      include: ("participant_avatars" | "participant_url")[],
+    }>,
+    ResponseType.Conversation>;
+
+  export type CreateConversation = API<
+    "/api/v1/conversations",
+    [],
+    "POST",
+    {
+      // An array of recipient ids. These may be user ids or course/group ids prefixed
+      // with “course_” or “group_” respectively,
+      // e.g. recipients[]=1&recipients=2&recipients[]=course_3.
+      // If the course/group has over 100 enrollments,
+      // 'bulk_message' and 'group_conversation' must be set to true.
+      recipients: string[],
+
+      //	The message to be sent
+      body: string,
+    }
+    &
+    Partial<{
+      subject: string,
+      force_new: boolean,
+      group_conversation: boolean,
+      attachment_ids: string[],
+      media_comment_id: string,
+      media_comment_type: "audio" | "video",
+      user_note: boolean,
+      mode: "sync" | "async",
+      scope: "unread" | "starred" | "archived",
+      filter: string[],
+      filter_mode: "and" | "or" | "default or",
+      context_code: string,
+    }>,
+    {}>;
+
+  export type UnreadCount = API<
+    "/api/v1/conversations/unread_count",
+    [],
+    "GET",
+    {},
+    {unread_count: number}>;
+
+}
