@@ -38,7 +38,7 @@ async function foo() {
 If you are using tsserver, most values in the parameters are super narrowed types and can be autocompleted directly. Request parameter `param` and response type are also typed.
 
 ## Convention
-`API` is the family of all API types, `*API` is the concrete type represent a canvas api end point. e.g `AccountAPI`.
+`API` is the family of all API types, `*API` is the concrete type represents a canvas api end point. e.g `AccountAPI`.
 
 ## Currently Supported APIs
 - Account
@@ -50,7 +50,9 @@ If you are using tsserver, most values in the parameters are super narrowed type
 - User
 
 ## Note
-The best document is problem the type definition itself. Types in `API` namespace are structured follow the [canvas lms api document](https://canvas.instructure.com/doc/api/index.html), more information can be found there.
+The best document is probably the type definition itself. Types in `API` namespace are structured follow the [canvas lms api document](https://canvas.instructure.com/doc/api/index.html), more information can be found there.
 
 ## License
 MIT
+
+Be really careful about not sharing your token.
