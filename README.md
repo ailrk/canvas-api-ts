@@ -1,11 +1,12 @@
 # Type driven canvas lms api
-A low leve© 2020nyournamed api wrapped for canvas api.
+A low level api wrapped for canvas api.
+
+This api is in it's early age, more apis and tests will be added later one. Once it is stable it will be a npm package.
 
 The most frustrated part of using apis is probably being not sure about what parameter to send and what kind of value the api will response. It can sometime take hours of trails and errors to fully understand the behavior of an api.
 
 This api wrapper is aimed to solve the problem. Your api request and response are backed by the type system and ensure you easier api using experience and type safty.
 
-This api is in it's early age, more apis and tests will be added later one.
 
 ## Config
 To use the api you first need canvas token. You can find out about how to get one from [here](https://kb.iu.edu/d/aaja)
@@ -35,6 +36,9 @@ async function foo() {
 }
 ```
 If you are using tsserver, most values in the parameters are super narrowed types and can be autocompleted directly. Request parameter `param` and response type are also typed.
+
+## Convention
+`API` is the family of all API types, `*API` is the concrete type represent a canvas api end point. e.g `AccountAPI`.
 
 ## Currently Supported APIs
 - Account
