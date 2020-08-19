@@ -4,7 +4,12 @@ import fetch from 'node-fetch';
 import URL from 'url';
 
 type Match<T, S extends API.APIKey> =
-  T extends API.API<infer U, infer UP, infer M, infer P, infer R> ?
+  T extends API.API<
+    infer U,
+    infer UP,
+    infer M,
+    infer P,
+    infer R> ?
   S extends "uri" ? U :
   S extends "uriParams" ? UP :
   S extends "method" ? M :
@@ -26,14 +31,18 @@ export async function canvas<T>(props: {
   extraHeaders?: any,
 }): Promise<Match<T, "response">> {
   const {method, uriParams, param, extraHeaders} = props;
-  const uri = uriParamsReplace(props.uri, uriParams ?? []);
+
+  const uri = uriParamsReplace(props.uri, uriParams ?? {});
   const headers = mkHeader(extraHeaders);
 
+  // build parameter used by `fetch`.
   const [url, config] = ((): [string, any] => {
     const base = getAuth().url;
     const url = URL.resolve(base, uri);
 
     switch (method) {
+      // build get url. not .env requires a full url with protocol,
+      // here we need to remove it to use url.,format.
       case "GET": {
         const hostname = base.split("https://").pop();
         const url = URL.format({
@@ -77,10 +86,14 @@ export async function canvas<T>(props: {
 }
 
 
-function uriParamsReplace(uri: string, uriParams: (number | string)[]) {
+// replace api endpoint params with uriParams.
+// throw an exceptoin when uriParams.length and number of endpoint params doesn't match up.
+function uriParamsReplace(uri: string, uriParams: {[key: string]: string | number}) {
   return uri.split("/").map(e => {
-    if (e.startsWith(":") && uriParams.length >= 0) {
-      const val = uriParams.shift()?.toString();
+    if (e.startsWith(":")) {
+      const key = e.slice(1).trim();
+      const val = uriParams[key]?.toString();
+
       if (val !== undefined) {
         return val;
       }
@@ -88,5 +101,7 @@ function uriParamsReplace(uri: string, uriParams: (number | string)[]) {
         + `Uri parameter is not matched with the api endpoint. ${uri}, `
         + `no parameter corresponds to ${e}.`);
     }
+
+    return e;
   }).join("/");
 }
