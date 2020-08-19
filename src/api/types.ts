@@ -2,6 +2,10 @@ import {HTTPMethod} from '../request/types';
 export type DateString = string;
 export type HTMLString = string;
 export type URLString = string;
+export type FileNameString = string;
+export type ContentTypeString = string;
+export type MIMETypeString = string;
+
 export interface API<U extends string, M extends HTTPMethod, P, R> {
   url: U,
   method: M,
@@ -11,7 +15,6 @@ export interface API<U extends string, M extends HTTPMethod, P, R> {
 
 // TODO add new end points here.
 export type APIEndpoints = AccountAPI.TermOfService;
-
 
 // All the repsonse types are under this namespace.
 namespace ResponseType {
@@ -94,6 +97,11 @@ namespace ResponseType {
     start_at?: DateString,
 
     end_at?: DateString
+  }
+
+  export interface CalendarLink {
+    // The URL of the calendar in ICS format
+    ics: URLString,
   }
 
   export interface Grade {
@@ -201,7 +209,8 @@ namespace ResponseType {
 
     // The enrollment type. One of 'StudentEnrollment', 'TeacherEnrollment',
     // 'TaEnrollment', 'DesignerEnrollment', 'ObserverEnrollment'.
-    type: | 'StudentEnrollment'
+    type:
+    | 'StudentEnrollment'
     | 'TeacherEnrollment'
     | 'TaEnrollment'
     | 'DesignerEnrollment'
@@ -527,44 +536,26 @@ namespace ResponseType {
     // optional: the permissions the user has for the course. returned only for a
     // single course and include[]=permissions
     permissions?: {
-
-      "create_discussion_topic": boolean,
-
-      "create_announcement": boolean
-
+      create_discussion_topic: boolean,
+      create_announcement: boolean
     },
-
     is_public: boolean,
-
     is_public_to_auth_users: boolean,
-
     public_syllabus: boolean,
-
     public_syllabus_to_auth: boolean,
 
     // optional: the public description of the course
     public_description?: string,
-
     storage_quota_mb: number,
-
     storage_quota_used_mb: number,
-
     hide_final_grades: boolean,
-
     license: string,
-
     allow_student_assignment_edits: boolean,
-
     allow_wiki_comments: boolean,
-
     allow_student_forum_attachments: boolean,
-
     open_enrollment: boolean,
-
     self_enrollment: boolean,
-
     restrict_enrollments_to_course_dates: boolean,
-
     course_format: string,
 
     // optional: this will be true if this user is currently prevented from viewing
@@ -580,44 +571,128 @@ namespace ResponseType {
 
     // optional: Set of restrictions applied to all locked course objects
     blueprint_restrictions?: {
-
       content: boolean,
-
       points: boolean,
-
       due_dates: boolean,
-
       availability_dates: boolean
     },
 
     // optional: Sets of restrictions differentiated by object type applied to
     // locked course objects
     blueprint_restrictions_by_object_type?: {
-
       assignment: {
-
         content: boolean,
-
         points: boolean
       },
-
       wiki_page: {
         content: boolean
       }
     }
   }
+
+  export interface File {
+    id: number,
+    uuid: string,
+    folder_id: number,
+    display_name: FileNameString,
+    filename: FileNameString,
+    "content-type": ContentTypeString,
+    url: URLString,
+
+    // file size in bytes
+    size: number,
+    created_at: DateString,
+    updated_at: DateString,
+    unlock_at: DateString,
+    locked: boolean,
+    hidden: boolean,
+    lock_at: DateString,
+    hidden_for_user: boolean,
+    thumbnail_url?: URLString,
+    modified_at: DateString,
+
+    // simplified content-type mapping
+    mime_class: MIMETypeString,
+
+    // identifier for file in third-party transcoding service
+    media_entry_id: string,
+    locked_for_user: boolean,
+    lock_info?: string,
+    lock_explanation: string,
+
+    // optional: url to the document preview. This url is specific to the user
+    // making the api call. Only included in submission endpoints.
+    preview_url?: URLString
+  }
+
+  export interface Folder {
+    context_type: string,
+    context_id: number,
+    files_count: number,
+    position: number,
+    updated_at: DateString,
+    folders_url: URLString,
+    files_url: URLString,
+    full_name: string,
+    lock_at: DateString,
+    id: number,
+    folders_count: number,
+    name: string,
+    parent_folder_id: number,
+    created_at: DateString,
+    unlock_at?: DateString,
+    hidden: boolean,
+    hidden_for_user: boolean,
+    locked: boolean,
+    locked_for_user: boolean,
+
+    // If true, indicates this is a read-only folder containing files submitted to
+    // assignments
+    for_submissions: boolean
+  }
+
+  export interface UsageRights {
+    // Describes the copyright and license information for a File
+    // Copyright line for the file
+    legal_copyright: string,
+    // Justification for using the file in a Canvas course. Valid values are
+    // 'own_copyright', 'public_domain', 'used_by_permission', 'fair_use',
+    // 'creative_commons'
+    use_justification:
+    | "own_copyright"
+    | "public_domain"
+    | "used_by_permission"
+    | "fair_use"
+    | "creative_commons",
+    // License identifier for the file.
+    license: string,
+    // Readable license name
+    license_name: string,
+    // Explanation of the action performed
+    message: string,
+    // List of ids of files that were updated
+    file_ids: number[]
+  }
+
+  export interface Liscense {
+    // a short string identifying the license
+    id: string,
+    // the name of the license
+    name: string,
+    // a link to the license text
+    url: URLString
+  }
+
 }
 
 
 // API for handling acounts
 // source https://canvas.instructure.com/doc/api/accounts.html
-namespace AccountAPI {
+export namespace AccountAPI {
   export type Acounts = API<
     "/api/v1/accounts",
     "GET",
-    {
-      include: ("lti_guid" | "registration_settings" | "services")[]
-    },
+    Partial<{include: ("lti_guid" | "registration_settings" | "services")[]}>,
     ResponseType.Account[]>;
 
   export type CourseAccounts = API<
@@ -635,13 +710,13 @@ namespace AccountAPI {
   export type AccountPermissions = API<
     "/api/v1/accounts/:account_id/permissions",
     "GET",
-    {permissions: string[]},
+    Partial<{permissions: string[]}>,
     {manage_account_memberships: boolean, become_user: boolean}>;
 
   export type SubAccount = API<
     "/api/v1/accounts/:account_id/sub_accounts",
     "GET",
-    {recursive: boolean},
+    Partial<{recursive: boolean}>,
     ResponseType.Account[]
   >;
 
@@ -654,7 +729,7 @@ namespace AccountAPI {
   export type AllCourseInAccount = API<
     "/api/v1/accounts/:account_id/courses",
     "GET",
-    {
+    Partial<{
       with_enrollments: boolean,
       enrollment_type: ("teacher" | "student" | "ta" | "obserber" | "design")[],
       published: boolean,
@@ -687,8 +762,54 @@ namespace AccountAPI {
       search_by: "course" | "teacher",
       starts_before: Date,
       ends_after: Date,
-    },
+    }>,
     ResponseType.Course[]>;
+
+  export type UpdateAccount = API<
+    "/api/v1/accounts/:id",
+    "PUT",
+    {
+      account: Partial<{
+        name: string,
+        sis_account_id: string,
+        default_time_zone: string,
+        default_storage_quota_mb: number,
+        default_user_storage_quota_mb: number,
+        default_group_storage_quota_mb: number,
+        settings: {
+          restrict_student_past_view: {
+            value: boolean,
+            locked: boolean,
+          },
+          restrict_student_future_view: {
+            value: boolean,
+            locked: boolean,
+          },
+          lock_all_announcements: {
+            value: boolean,
+            locked: boolean,
+          },
+          usage_rights_required: {
+            value: boolean,
+            locked: boolean,
+          },
+          restrict_student_future_listing: {
+            value: boolean,
+            locked: boolean,
+          },
+          lock_outcome_proficiency: {
+            value: boolean,
+            locked: boolean,
+          },
+          lock_proficiency_calculation: {
+            value: boolean,
+            locked: boolean,
+          },
+          services: string,
+        }
+      }>
+    },
+    ResponseType.Account>;
 
   export type DeleteAccountFromRootAccount = API<
     "/api/v1/accounts/:account_id/users/:user_id",
@@ -700,9 +821,139 @@ namespace AccountAPI {
     "/api/v1/accounts/:account_id/sub_accounts",
     "POST",
     {
-
+      account: {
+        name: string,
+        sis_account_id?: string,
+        default_storage_quota_mb?: string,
+        default_user_storage_quota_mb?: string,
+        default_group_storage_quota_mb?: string,
+      }
     },
     ResponseType.Account>;
+
+  export type DeleteSubAccount = API<
+    "/api/v1/accounts/:account_id/sub_accounts/:id",
+    "DELETE",
+    null,
+    ResponseType.Account>;
+}
+
+// API for files
+// https://canvas.instructure.com/doc/api/files.html
+export namespace FilesAPI {
+  export namespace Quota {
+    export type GetCourseQuota = API<
+      "/api/v1/courses/:course_id/files/quota",
+      "GET",
+      null,
+      {quota: number, quota_used: number}>;
+
+    export type GetGroupQuota = API<
+      "/api/v1/groups/:group_id/files/quota",
+      "GET",
+      null,
+      {quota: number, quota_used: number}>;
+
+    export type GetUserQuota = API<
+      "/api/v1/users/:user_id/files/quota",
+      "GET",
+      null,
+      {quota: number, quota_used: number}>;
+  }
+
+  export namespace List {
+    type ListParam = {
+      content_type: MIMETypeString[],
+      exclude_content_types: MIMETypeString[],
+      search_term: string,
+      include: ("user" | "usage_rights")[],
+      only: ("names")[],
+      sort:
+      | "name"
+      | "size"
+      | "created_at"
+      | "updated_at"
+      | "content_type"
+      | "user",
+      order: "asc" | "desc",
+    };
+
+    export type GetCourseList = API<
+      "/api/v1/courses/:course_id/files",
+      "GET",
+      Partial<ListParam>,
+      ResponseType.File[]>;
+
+    export type GetUserList = API<
+      "/api/v1/users/:user_id/files",
+      "GET",
+      Partial<ListParam>,
+      ResponseType.File[]>;
+
+    export type GetGroupList = API<
+      "/api/v1/groups/:group_id/files",
+      "GET",
+      Partial<ListParam>,
+      ResponseType.File[]>;
+
+    export type GetFolderList = API<
+      "/api/v1/folders/:id/files",
+      "GET",
+      Partial<ListParam>,
+      ResponseType.File[]>;
+  }
+
+  export namespace GetFile {
+    export type typeGetFile = API<
+      "/api/v1/files/:id",
+      "GET",
+      Partial<{include: ("user" | "usage_rights")[]}>,
+      ResponseType.File>;
+
+    export type typeGetFilePost = API<
+      "/api/v1/files/:id",
+      "POST",
+      Partial<{include: ("user" | "usage_rights")[]}>,
+      ResponseType.File>;
+
+    export type typeGetCourseFile = API<
+      "/api/v1/courses/:course_id/files/:id",
+      "GET",
+      Partial<{include: ("user" | "usage_rights")[]}>,
+      ResponseType.File>;
+
+    export type typeGetGroupFile = API<
+      "/api/v1/groups/:group_id/files/:id",
+      "GET",
+      Partial<{include: ("user" | "usage_rights")[]}>,
+      ResponseType.File>;
+
+    export type typeGetUserFile = API<
+      "/api/v1/users/:user_id/files/:id",
+      "GET",
+      Partial<{include: ("user" | "usage_rights")[]}>,
+      ResponseType.File>;
+  }
+
+  export type UpateFile = API<
+    "/api/v1/files/:id",
+    "PUT",
+    Partial<{
+      name: string,
+      parent_folder_id: string,
+      on_duplicate: "overwrite" | " rename",
+      lock_at: DateString,
+      unlock_at: DateString,
+      locked: boolean,
+      hidden: boolean,
+    }>,
+    ResponseType.File>;
+
+  export type DeleteFile = API<
+    "/api/v1/files/:id",
+    "DELETE",
+    Partial<{replace: boolean}>,
+    ResponseType.File>;
 
 }
 
