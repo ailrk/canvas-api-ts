@@ -1,7 +1,7 @@
 # Type driven canvas lms api
 A low level strongly typed api wrapped for canvas api.
 
-The most frustrated part of using apis is probably being not sure about what parameter to send and what type the api will response. To fully understand the behavior of an api sometimes requires hours of trails and errors.
+The most frustrated part of using apis is probably being not sure about what parameter to send and what kind of value the api will response. It can sometime take hours of trails and errors to fully understand the behavior of an api.
 
 This api wrapper is aimed to solve the problem. Your api request and response are backed by the type system and ensure you easier api using experience and type safty.
 
@@ -22,7 +22,7 @@ async function foo() {
 ```
 If you are using tsserver, most values in the parameters are super narrowed types and can be autocompleted directly. Request parameter `param` and response type are also typed.
 
-## Currently Supported APIS
+## Currently Supported APIs
 - Account
 - File
 - File Upload
