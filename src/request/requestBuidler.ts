@@ -100,6 +100,8 @@ function uriParamsReplace(uri: string, uriParams: {[key: string]: string | numbe
       throw new Error(""
         + `Uri parameter is not matched with the api endpoint. ${uri}, `
         + `no parameter corresponds to ${e}.`);
+    } else if (e.startsWith("*")){ // combine full path.
+      return e.slice(1).trim();
     }
 
     return e;
