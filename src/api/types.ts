@@ -6,12 +6,20 @@ export type FileNameString = string;
 export type ContentTypeString = string;
 export type MIMETypeString = string;
 
+
 export interface API<U extends string, M extends HTTPMethod, P, R> {
   url: U,
   method: M,
   param: P,
   response: R,
 };
+
+export type APIKey =
+  | "url"
+  | "method"
+  | "param"
+  | "response";
+
 
 // TODO add new end points here.
 export type APIEndpoints = AccountAPI.TermOfService;
