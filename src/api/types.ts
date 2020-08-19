@@ -609,10 +609,7 @@ export namespace FilesAPI {
       "DELETE",
       RemoveUsageRightsParam,
       ResponseType.UsageRights>;
-
   }
-
-
 }
 
 // Canvas fild upload procedure
