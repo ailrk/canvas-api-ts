@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "esModuleInterop": true,
+    "downlevelIteration": true,
     "outDir": "./dist",
     "allowJs": true,
     "skipLibCheck": true,
@@ -11,7 +12,10 @@
     "module": "CommonJS",
     "baseUrl": ".",
     "declaration": true,
-    "typeRoots": ["./node_modules/@types", "./types"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ]
   },
   "include": [
     "src"
