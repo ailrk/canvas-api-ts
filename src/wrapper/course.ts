@@ -73,6 +73,11 @@ export async function getCourseByUser(
   })
 }
 
+getCourseByUser("self", {
+  state: "deleted",
+  include: ["term"],
+  enrollment_state: "active",
+})
 
 export async function getUsersInCourse(
   courseId: Match<C.ListUserInCourse, "uriParams">["course_id"],

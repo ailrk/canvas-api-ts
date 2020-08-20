@@ -366,7 +366,7 @@ export namespace FilesAPI {
       ResponseType.Folder[]>;
   }
 
-  export namespace ResolvPath {
+  export namespace ResolvePath {
     export type Course = API<
       "/api/v1/courses/:course_id/folders/by_path/*full_path",
       {course_id: number, full_path: string | ""},
