@@ -27,7 +27,7 @@ If you want to upload your project somewhere __MAKE SURE__ the `.env` file is no
 
 #### High level interface
 High level interface can be used easily. Functionalities are separated into parts to enable more customizations.
-```
+```typescript
 import {fetchFile, getFiles, store} from 'canvas-api-ts';
 
 // fille wil be download at the dir
