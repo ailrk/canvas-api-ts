@@ -33,16 +33,21 @@ import {fetchFile, getFiles, store} from 'canvas-api-ts';
 // fille wil be download at the dir
 const main = async () => {
   // download the first file
+
   // getFiles return the representation of file in canvas server.
   // the actual file is stored in a different server and need to be
   // fetched separately.
   const file = (await getFiles())[0];
 
-  // get a stream of file.
+  // get the stream of file.
   const stream =  await fetchFile(file);
 
   // write file to current directory.
-  await store('.', stream);
+  try {
+    await store('.', stream);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 main();
