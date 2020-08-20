@@ -36,7 +36,7 @@ const main = async () => {
   // getFiles return the representation of file in canvas server.
   // the actual file is stored in a different server and need to be
   // fetched separately.
-  const file = await getFiles()[0];
+  const file = (await getFiles())[0];
 
   // get a stream of file.
   const stream =  await fetchFile(file);
