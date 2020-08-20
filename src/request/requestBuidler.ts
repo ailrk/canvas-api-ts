@@ -16,7 +16,7 @@ export type Match<T, S extends API.APIKey> =
   S extends "param" ? P :
   S extends "response" ? R : never : never;
 
-function mkHeader(extra: any = {}) { // throw
+export function mkHeader(extra: any = {}) { // throw
   return {
     "Authorization": `Bearer ${getAuth().token}`,
     ...extra

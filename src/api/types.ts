@@ -622,10 +622,10 @@ export namespace FileUploadViaPost {
     URLString,
     {},
     "POST",
+    {file: ArrayBuffer} &
     Partial<{
-      key: string
-      [unspecified: string]: string,
-    }>,
+      key: string,
+    }> & any,
 
     // sample respnse:
     // HTTP/1.1 301 Moved Permanently

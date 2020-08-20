@@ -12,3 +12,7 @@ type SuperOf<T, K extends keyof T> = {[P in K]: T[P]};
 
 
 export type Selector<T, S> = (a: T) => S;
+
+export function isValidURL(url: string) {
+  return (/^http?:\/\//).test(url);
+}

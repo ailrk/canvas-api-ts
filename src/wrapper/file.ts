@@ -194,7 +194,7 @@ export async function getUserFoldersByPath(
   });
 }
 
-export async function getCourseFolder(
+export async function getFolderInCourse(
   courseId: Match<F.GetFoler.Course, "uriParams">["course_id"],
   folderId: Match<F.GetFoler.Course, "uriParams">["id"],
 ) {
@@ -206,7 +206,7 @@ export async function getCourseFolder(
   });
 }
 
-export async function getUserFolder(
+export async function getFolderOfUser(
   userId: Match<F.GetFoler.User, "uriParams">["user_id"],
   folderId: Match<F.GetFoler.User, "uriParams">["id"],
 ) {
@@ -218,7 +218,7 @@ export async function getUserFolder(
   });
 }
 
-export async function getGroupFolder(
+export async function getFolderInGroup(
   groupId: Match<F.GetFoler.Group, "uriParams">["group_id"],
   folderId: Match<F.GetFoler.Group, "uriParams">["id"],
 ) {
@@ -241,4 +241,90 @@ export async function getFolder(
   });
 }
 
+export async function updateFolder(
+  folderId: Match<F.UpdateFoler, "uriParams">["id"],
+  config: Match<F.UpdateFoler, "param">,
+) {
+  return canvas<F.UpdateFoler>({
+    uri: "/api/v1/folders/:id",
+    uriParams: {id: folderId},
+    method: "PUT",
+    param: config,
+  })
+}
 
+
+export async function createFolderInCourse(
+  courseId: Match<F.CreateFoler.Course, "uriParams">["course_id"],
+  config: Match<F.CreateFoler.Course, "param">
+) {
+  return canvas<F.CreateFoler.Course>({
+    uri: "/api/v1/courses/:course_id/folders",
+    uriParams: {course_id: courseId},
+    method: "POST",
+    param: config,
+  });
+}
+
+export async function createFolderOfUser(
+  userId: Match<F.CreateFoler.User, "uriParams">["user_id"],
+  config: Match<F.CreateFoler.User, "param">
+) {
+  return canvas<F.CreateFoler.User>({
+    uri: "/api/v1/users/:user_id/folders",
+    uriParams: {user_id: userId},
+    method: "POST",
+    param: config,
+  });
+}
+
+export async function createFolderInGroup(
+  groupId: Match<F.CreateFoler.Group, "uriParams">["group_id"],
+  config: Match<F.CreateFoler.Group, "param">
+) {
+  return canvas<F.CreateFoler.Group>({
+    uri: "/api/v1/groups/:group_id/folders",
+    uriParams: {group_id: groupId},
+    method: "POST",
+    param: config,
+  });
+}
+
+export async function createFolder(
+  folderId: Match<F.CreateFoler.Folder, "uriParams">["folder_id"],
+  config: Match<F.CreateFoler.Folder, "param">
+) {
+  return canvas<F.CreateFoler.Folder>({
+    uri: "/api/v1/folders/:folder_id/folders",
+    uriParams: {folder_id: folderId},
+    method: "POST",
+    param: config,
+  });
+}
+
+export async function deleteFolder(
+  folderId: Match<F.DeleteFolder, "uriParams">["id"],
+  config: Match<F.DeleteFolder, "param">
+) {
+  return canvas<F.DeleteFolder>({
+    uri: "/api/v1/folders/:id",
+    uriParams: {id: folderId},
+    method: "DELETE",
+    param: config,
+  })
+}
+
+// ** Low level file uploading api. This will only create a pending
+// file on canvas' server. To perform an entire data upload please
+// use uploadAFile() in `uploadPolily.ts`.
+export async function UploadAFileENDPOINT(
+  folderId: Match<F.UploadAFile, "uriParams">["folder_id"],
+  config: Match<F.UploadAFile, "param">
+) {
+  return canvas<F.UploadAFile>({
+    uri: "/api/v1/folders/:folder_id/files",
+    uriParams: {folder_id: folderId},
+    method: "POST",
+    param: config,
+  });
+}
