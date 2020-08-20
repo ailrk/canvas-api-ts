@@ -1,5 +1,7 @@
 # Type driven canvas lms api
-A typed low level api wrapper for canvas lms api.
+A typed api wrapper for canvas lms api.
+
+There is an set of low level interface provides full control over the canvas restful endpoints, and a high level interface that makes things easier.
 
 * This api is in it's early age, more apis and tests will be added later one. Once it is stable it will be a npm package.
 
@@ -22,6 +24,31 @@ CANVAS_API_URL=https://canvas.ubc.ca
 If you want to upload your project somewhere __MAKE SURE__ the `.env` file is not also shared. The api token basically gives anyone all the credential of your account.
 
 ## Example
+
+#### High level interface
+High level interface can be used easily. Functionalities are separated into parts to enable more customizations.
+```
+import {fetchFile, getFiles, store} from 'canvas-api-ts';
+
+// fille wil be download at the dir
+const main = async () => {
+  // download the first file
+  // getFiles return the representation of file in canvas server.
+  // the actual file is stored in a different server and need to be
+  // fetched separately.
+  const file = await getFiles()[0];
+
+  // get a stream of file.
+  const stream =  await fetchFile(file);
+
+  // write file to current directory.
+  await store('.', stream);
+};
+
+main();
+```
+#### Low level interface
+Each endpoint is reprensented as a type. call `canvas` with the corresponding type as it's type parameter to send a request. By default your token will be added into the request header. There is also
 ```typescript
 import {API, canvas} from 'canvas-api-ts';
 async function foo() {
@@ -29,7 +56,8 @@ async function foo() {
     uri: "/api/v1/users/:user_id/files/quota",
     uriParams: {user_id: "self"},
     method: "GET",
-    param: null
+    param: null,
+    extra: ...
   });
   console.log(result.quota_used);
 }

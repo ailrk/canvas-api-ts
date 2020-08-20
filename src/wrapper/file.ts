@@ -1,7 +1,7 @@
 import {FilesAPI as F} from '../api/types';
 import {canvas, Match, mkHeader} from '../request/requestBuidler';
 import {ResponseType} from '../api/responseTypes';
-import {isValidURL} from 'src/utils';
+import {isValidURL} from '../utils';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import {pipeline} from 'stream';
