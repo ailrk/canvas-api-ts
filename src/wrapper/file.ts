@@ -82,7 +82,7 @@ export async function fetchFile(
  */
 export async function* fetchFiles(files: ResponseType.File[]) {
   for (const file of files) {
-    yield await fetchFile(file);
+    yield fetchFile(file);
   }
 }
 
