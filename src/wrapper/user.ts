@@ -11,6 +11,10 @@ export async function getUserSelf() {
   })
 }
 
+export async function getUser() {
+
+}
+
 export async function getUserPageViews(
   userId?: Match<U.ListUserPageViews, "uriParams">["user_id"],
   period?: [Date, Date],

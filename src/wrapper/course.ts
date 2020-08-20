@@ -1,6 +1,5 @@
 import {CoursesAPI as C} from '../api/types';
 import {canvas, Match} from '../request/requestBuidler';
-import {Unpacked} from '../utils';
 
 
 export async function createCourse(
@@ -73,6 +72,7 @@ export async function getCourseByUser(
     param: config
   })
 }
+
 
 export async function getUsersInCourse(
   courseId: Match<C.ListUserInCourse, "uriParams">["course_id"],
