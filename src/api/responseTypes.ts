@@ -553,6 +553,7 @@ export namespace ResponseType {
 
     // The URL requested
     url: URLString,
+
     // The type of context for the request
     context_type: string,
 
@@ -866,6 +867,43 @@ export namespace ResponseType {
     // the name of the license
     name: string,
     // a link to the license text
+    url: URLString
+  }
+
+  export interface Progress {
+    // the ID of the Progress object
+    id: number,
+
+    // the context owning the job.
+    context_id: number,
+
+    context_type: string,
+
+    // the id of the user who started the job
+    user_id: number,
+
+    // the type of operation
+    tag: string,
+
+    //percent completed
+    completion: number,
+
+    // the state of the job one of 'queued', 'running', 'completed', 'failed'
+    workflow_state: "queued" | "completed" | "running" | "failed",
+
+    // the time the job was created
+    created_at: DateString,
+
+    // the time the job was last updated
+    updated_at: DateString,
+
+    // optional details about the job
+    message?: string,
+
+    // optional results of the job. omitted when job is still pending
+    results?: {id: string},
+
+    // url where a progress update can be retrieved
     url: URLString
   }
 

@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 export interface Auth {
   url: string,
   token: string,

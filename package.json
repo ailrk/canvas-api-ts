@@ -1,43 +1,45 @@
 {
-    "name": "promise-by-need",
-    "version": "1.0.0",
-    "description": "Lazy evaluated promises",
-    "main": "dist/index.js",
-    "type": "dist/index.d.ts",
-    "homepage": "https://github.com/ailrk/promise-by-need",
-    "scripts": {
-        "test": "npm run build && jest",
-        "build": "rimraf dist && tsc"
-    },
-    "keywords": [
-        "promise",
-        "lazy"
-    ],
-    "jest": {
-        "modulePaths": [
-            "src"
-        ]
-    },
-    "author": "Ailrk",
-    "license": "MIT",
-    "moduleFileExtensions": [
-        "ts"
-    ],
-    "devDependencies": {
-        "@babel/preset-typescript": "^7.10.4",
-        "@types/jest": "^26.0.7",
-        "@types/node": "^14.0.27",
-        "babel-core": "^6.26.3",
-        "babel-jest": "^26.3.0",
-        "jest": "^26.2.0",
-        "regenerator-runtime": "^0.13.7",
-        "@babel/preset-env": "^7.11.0",
-        "typescript": "^3.9.7"
-    },
-    "dependencies": {
-        "@types/node-fetch": "^2.5.7",
-        "dotenv": "^8.2.0",
-        "node-fetch": "^2.6.0",
-        "parse-link-header": "^1.0.1"
-    }
+  "name": "canvas-api-ts",
+  "version": "0.0.0",
+  "description": "Strongly typed canvas lms api",
+  "main": "dist/index.js",
+  "type": "dist/index.d.ts",
+  "homepage": "https://github.com/ailrk/canvas-api-ts",
+  "scripts": {
+    "test": "npm run build && jest",
+    "build": "rimraf dist && tsc"
+  },
+  "keywords": [
+    "canvas",
+    "aps",
+    "canvas api",
+    "canvas lms api",
+    "type"
+  ],
+  "jest": {
+    "modulePaths": [
+      "src"
+    ]
+  },
+  "author": "Ailrk",
+  "license": "MIT",
+  "moduleFileExtensions": [
+    "ts"
+  ],
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.0.27",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^26.3.0",
+    "jest": "^26.2.0",
+    "regenerator-runtime": "^0.13.7",
+    "@babel/preset-env": "^7.11.0",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@types/node-fetch": "^2.5.7",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0"
+  }
 }

@@ -72,16 +72,14 @@ export namespace AccountAPI {
     {account_id: number | "self"},
     "GET",
     Partial<{recursive: boolean}>,
-    ResponseType.Account[]
-  >;
+    ResponseType.Account[]>;
 
   export type TermOfService = API<
     "/api/v1/accounts/:account_id/terms_of_service",
     {account_id: number | "self"},
     "GET",
     {},
-    ResponseType.TermOfService
-  >;
+    ResponseType.TermOfService>;
 
   export type AllCourseInAccount = API<
     "/api/v1/accounts/:account_id/courses",
@@ -273,35 +271,35 @@ export namespace FilesAPI {
   }
 
   export namespace GetFile {
-    export type typeGetFile = API<
+    export type GetFile = API<
       "/api/v1/files/:id",
       {id: number},
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
-    export type typeGetFilePost = API<
+    export type GetFilePost = API<
       "/api/v1/files/:id",
       {id: number},
       "POST",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
-    export type typeGetCourseFile = API<
+    export type GetCourseFile = API<
       "/api/v1/courses/:course_id/files/:id",
       {course_id: number, id: number},
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
-    export type typeGetGroupFile = API<
+    export type GetGroupFile = API<
       "/api/v1/groups/:group_id/files/:id",
       {group_id: number, id: number},
       "GET",
       Partial<{include: ("user" | "usage_rights")[]}>,
       ResponseType.File>;
 
-    export type typeGetUserFile = API<
+    export type GetUserFile = API<
       "/api/v1/users/:user_id/files/:id",
       {user_id: number | "self", id: number},
       "GET",
@@ -653,8 +651,6 @@ export namespace FileUploadViaPost {
   }
 }
 
-}
-
 
 // https://canvas.instructure.com/doc/api/announcements.html
 export namespace AnnouncementsAPI {
@@ -853,6 +849,37 @@ export namespace CoursesAPI {
       enroll_me: boolean,
 
       enable_sis_reactivation: boolean
+    }>,
+    ResponseType.Course>;
+
+  export type GetACourse = API<
+    "/api/v1/courses/:id",
+    {id: number},
+    "GET",
+    Partial<{
+      include: (
+        | "needs_grading_count"
+        | "syllabus_body"
+        | "public_description"
+        | "total_scores"
+        | "current_grading_period_scores"
+        | "term"
+        | "account"
+        | "course_progress"
+        | "sections"
+        | "storage_quota_used_mb"
+        | "total_students"
+        | "passback_status"
+        | "favorites"
+        | "teachers"
+        | "observed_users"
+        | "all_courses"
+        | "permisions"
+        | "observed_users"
+        | "course_image"
+        | "concludeds"
+      )[],
+      teacher_limit: number,
     }>,
     ResponseType.Course>;
 
@@ -1090,4 +1117,13 @@ export namespace UserAPI {
       end_time: DateString,
     }>,
     ResponseType.PageView[]>;
+}
+
+export namespace Progress {
+  export type Query = API<
+    "/api/v1/progress/:id",
+    {id: number | "self"},
+    "GET",
+    {},
+    ResponseType.Progress>;
 }

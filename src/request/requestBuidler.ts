@@ -3,7 +3,7 @@ import {getAuth} from '../auth/auth';
 import fetch from 'node-fetch';
 import URL from 'url';
 
-type Match<T, S extends API.APIKey> =
+export type Match<T, S extends API.APIKey> =
   T extends API.API<
     infer U,
     infer UP,
@@ -56,26 +56,15 @@ export async function canvas<T>(props: {
       }
 
       case "POST": {
-        return [url, {
-          method: "post",
-          body: JSON.stringify(param),
-          headers,
-        }];
+        return [url, {method: "post", body: JSON.stringify(param), headers, }];
       }
 
       case "DELETE": {
-        return [url, {
-          method: "delete",
-          headers,
-        }];
+        return [url, {method: "delete", headers, }];
       }
 
       case "PUT":
-        return [url, {
-          method: "put",
-          body: JSON.stringify(param),
-          headers,
-        }];
+        return [url, {method: "put", body: JSON.stringify(param), headers, }];
 
       default:
         throw new Error(`Wrong HTTP method ${method}`);
@@ -91,19 +80,22 @@ export async function canvas<T>(props: {
 function uriParamsReplace(uri: string, uriParams: {[key: string]: string | number}) {
   return uri.split("/").map(e => {
     if (e.startsWith(":")) {
+
       const key = e.slice(1).trim();
       const val = uriParams[key]?.toString();
 
       if (val !== undefined) {
         return val;
       }
+
       throw new Error(""
         + `Uri parameter is not matched with the api endpoint. ${uri}, `
         + `no parameter corresponds to ${e}.`);
-    } else if (e.startsWith("*")){ // combine full path.
+
+    } else if (e.startsWith("*")) { // combine full path.
+
       return e.slice(1).trim();
     }
-
     return e;
   }).join("/");
 }
