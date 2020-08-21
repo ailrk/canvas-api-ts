@@ -28,7 +28,8 @@ If you want to upload your project somewhere __MAKE SURE__ the `.env` file is no
 #### High level interface
 High level interface can be used easily. Functionalities are separated into parts to enable more customizations.
 ```typescript
-import {fetchFile, getFiles, store} from 'canvas-api-ts';
+import {file} from 'canvas-api-ts';
+
 
 // fille wil be download at the dir
 const main = async () => {
@@ -37,14 +38,14 @@ const main = async () => {
   // getFiles return the representation of file in canvas server.
   // the actual file is stored in a different server and need to be
   // fetched separately.
-  const file = (await getFiles())[0];
+  const f = (await file.getFiles())[0];
 
   // get the stream of file.
-  const stream =  await fetchFile(file);
+  const stream =  await file.fetchFile(f);
 
   // write file to current directory.
   try {
-    await store('.', stream);
+    await file.store('.', stream);
   } catch (err) {
     console.error(err);
   }
