@@ -2,6 +2,7 @@ import {getAuth} from '../src/auth/auth';
 import * as API from '../src/api/types';
 import {canvas} from '../src/request/requestBuidler';
 import * as A from '../src/index';
+import { inflateSync } from 'zlib';
 
 // test functionalities of the api.
 

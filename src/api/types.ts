@@ -1126,4 +1126,74 @@ export namespace Progress {
     "GET",
     {},
     ResponseType.Progress>;
+
+  export namespace Assigment {
+    type AssignmentParam = Partial<{
+      include: (
+        | "submission"
+        | "assignment_visibility"
+        | "all_dates"
+        | "overrides"
+        | "observed_users"
+        | "can_edit")[],
+      search_term: string,
+      override_assignment_dates: boolean,
+      needs_grading_count_by_section: boolean,
+      bucket:
+      | "past" | "overdue" | "undated" | "ungraded" | "unsubmitted"
+      | "upcoming" | "future",
+      assignment_ids: string[],
+      order_by: "position" | "name" | "due_at",
+      post_to_sis: boolean
+    }>
+    export type DeleteAnAssignment = API<
+      "/api/v1/courses/:course_id/assignments/:id",
+      {course_id: number, id: number},
+      "DELETE",
+      {},
+      ResponseType.Assignment>;
+
+    export type ListAssignment = API<
+      "/api/v1/courses/:course_id/assignments",
+      {course_id: number},
+      "GET",
+      AssignmentParam,
+      ResponseType.Assignment[]>;
+
+    export type ListAssignmentByAssignmentGroup = API<
+      "/api/v1/courses/:course_id/assignment_groups/:assignment_group_id/assignments",
+      {course_id: number, assignment_group_id: number},
+      "GET",
+      AssignmentParam,
+      ResponseType.Assignment[]>;
+
+    export type ListAssignmentForUser = API<
+      "/api/v1/users/:user_id/courses/:course_id/assignments",
+      {user_id: number | "self", course_id: number},
+      "GET",
+      AssignmentParam,
+      ResponseType.Assignment[]>;
+
+    export type AnAssignmet = API<
+      "/api/v1/courses/:course_id/assignments/:id",
+      {course_id: number, id: number},
+      "GET",
+      Partial<{
+        include: (
+          | "submission" | "assignment_visibility" | "overrides"
+          | "observed_users" | "can_edit")[],
+        override_assignment_dates: boolean,
+        needs_grading_count_by_section: boolean,
+        all_dates: boolean,
+      }>,
+      ResponseType.Assignment>;
+
+    export type CreateNewAssignment = API<
+      "/api/v1/courses/:course_id/assignments",
+      {course_id: number},
+      "POST",
+      {},
+      ResponseType.Assignment>;
+
+  }
 }

@@ -62,7 +62,7 @@ async function foo() {
     uriParams: {user_id: "self"},
     method: "GET",
     param: null,
-    extra: ...
+    extraHeaders: {...}
   });
   console.log(result.quota_used);
 }

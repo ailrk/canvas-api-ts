@@ -11,9 +11,16 @@ export async function getUserSelf() {
   })
 }
 
-export async function getUser() {
-
-}
+export async function getUserActivityStream(
+  config: Match<U.ListActivityStream, "param">,
+) {
+  return canvas<U.ListActivityStream>({
+    uri: "/api/v1/users/self/activity_stream",
+    uriParams: {},
+    method: "GET",
+    param: config
+  });
+};
 
 export async function getUserPageViews(
   userId?: Match<U.ListUserPageViews, "uriParams">["user_id"],
