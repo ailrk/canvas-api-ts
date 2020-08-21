@@ -38,16 +38,20 @@ const main = async () => {
   // getFiles return the representation of file in canvas server.
   // the actual file is stored in a different server and need to be
   // fetched separately.
-  const f = (await file.getFiles())[0];
 
-  // get the stream of file.
-  const stream =  await file.fetchFile(f);
+  const folders = await File.getUserFolders("self");
+  const COSC221 = folders.filter(e => e.name.startsWith("COSC 211"))[0];
 
-  // write file to current directory.
-  try {
-    await file.store('.', stream);
-  } catch (err) {
-    console.error(err);
+  // pull out a list of promises
+  const filePromises = await File.fetchAllFromAFolder(COSC221, {});
+
+  // Promise.all the list of promises to avoid block.
+  const files = await Promise.all(filePromises);
+
+  // Here is essentially synchronous code.
+  for (const file of files) {
+    // write file stream to the directory.
+    await File.store('./directory', file);
   }
 };
 

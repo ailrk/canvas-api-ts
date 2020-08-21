@@ -40,7 +40,7 @@ export async function store(baseDir: string, stream: FileStream) {
   }
   const filepath = path.join(baseDir, stream.filename);
   const wstream = fs.createWriteStream(filepath);
-  return streamPipeline(stream.stream, wstream);
+  await streamPipeline(stream.stream, wstream);
 }
 
 
@@ -80,10 +80,10 @@ export async function fetchFile(
  * @return a promise of a list of binary file and there corresponding File.
  *          File can be used to determine what to do with the binary buffer.
  */
-export async function* fetchFiles(files: ResponseType.File[]) {
-  for (const file of files) {
-    yield fetchFile(file);
-  }
+export async function fetchFiles(files: ResponseType.File[]) {
+  return files.map(async file => {
+    return fetchFile(file)
+  });
 }
 
 /**
@@ -91,12 +91,12 @@ export async function* fetchFiles(files: ResponseType.File[]) {
  * @param folder
  * @return
  */
-export async function* fetchAllFromAFolder(
+export async function fetchAllFromAFolder(
   folder: ResponseType.Folder,
   config: Match<F.List.Folder, "param">,) {
   const {id} = folder;
   const files = await getFilesOfAFolder(id, config);
-  yield* fetchFiles(files);
+  return fetchFiles(files);
 }
 
 export async function getFile(

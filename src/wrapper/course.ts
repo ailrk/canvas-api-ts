@@ -60,6 +60,7 @@ export async function getCourses(
   }
 }
 
+
 export async function getCourseByUser(userId: Match<C.ListCoursesByAUser, "uriParams">["user_id"],
   config: Match<C.ListCoursesByAUser, "param">,
 ) {
@@ -71,11 +72,6 @@ export async function getCourseByUser(userId: Match<C.ListCoursesByAUser, "uriPa
   })
 }
 
-getCourseByUser("self", {
-  state: "deleted",
-  include: ["term"],
-  enrollment_state: "active",
-})
 
 export async function getUsersInCourse(
   courseId: Match<C.ListUserInCourse, "uriParams">["course_id"],
