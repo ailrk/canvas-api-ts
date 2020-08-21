@@ -1,8 +1,6 @@
 import {getAuth} from '../src/auth/auth';
 import * as API from '../src/api/types';
 import {canvas} from '../src/request/requestBuidler';
-import * as A from '../src/index';
-import { inflateSync } from 'zlib';
 
 // test functionalities of the api.
 
@@ -61,7 +59,7 @@ describe("Basic Test Suite, testing api functinoalities", () => {
   });
 
   it("+", async () => {
-    const result = await canvas<API.FilesAPI.List.GetUserList>({
+    const result = await canvas<API.FilesAPI.List.User>({
       uri: "/api/v1/users/:user_id/files",
       uriParams: {user_id: "self"},
       method: "GET",
@@ -70,3 +68,13 @@ describe("Basic Test Suite, testing api functinoalities", () => {
     expect(typeof result.length === "number").toBe(true);
   });
 });
+
+it("search", async () => {
+  const result = await canvas<API.SearchAPI.ListAllCourses>({
+    uri: "/api/v1/search/all_courses",
+    uriParams: {},
+    method: "GET",
+    param: {search: ""}
+  });
+  expect(typeof result.length === "number").toBe(true);
+})

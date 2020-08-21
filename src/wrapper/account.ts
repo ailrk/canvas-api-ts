@@ -4,6 +4,7 @@ import {canvas, Match} from '../request/requestBuidler';
 import {getCourses, getCourse} from './course';
 import {Unpacked, Selector} from '../utils';
 
+
 export async function getAccount() {
   return canvas<A.Acounts>({
     uri: "/api/v1/accounts",
@@ -33,7 +34,7 @@ export async function getSubAccount(
 
 export async function getCoursesInAccount(
   accountId: Match<A.SubAccount, "uriParams">["account_id"],
-  courseOption: Match<C.ListCoursesForAUser, "param">,
+  courseOption: Match<C.ListCoursesByAUser, "param">,
 ) {
   const accounts = await getSubAccount(accountId);
   const courses = await Promise.all(accounts.map(e => getCourses(courseOption, e.id)));

@@ -4,3 +4,6 @@ export * from './user';
 export * from './uploadPolicy';
 export * from './file';
 export * from './progress';
+export * from './announcement';
+export * from './assignment';
+export * from './conversation';

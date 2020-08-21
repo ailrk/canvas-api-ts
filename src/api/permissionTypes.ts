@@ -79,4 +79,3 @@ export type Permission =
   | "view_group_pages"                 // [sTADo] Groups - view all student groups
   | "view_user_logins"                 // [ TA  ] Users - view login IDs
   ;
-

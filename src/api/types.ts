@@ -1164,7 +1164,7 @@ export namespace ProgressAPI {
 }
 
 export namespace AssigmentAPI {
-  type AssignmentParam = Partial<{
+  export type AssignmentParam = Partial<{
     include: (
       | "submission"
       | "assignment_visibility"
@@ -1181,7 +1181,8 @@ export namespace AssigmentAPI {
     assignment_ids: string[],
     order_by: "position" | "name" | "due_at",
     post_to_sis: boolean
-  }>
+  }>;
+
   export type DeleteAnAssignment = API<
     "/api/v1/courses/:course_id/assignments/:id",
     {course_id: number, id: number},
@@ -1189,21 +1190,21 @@ export namespace AssigmentAPI {
     {},
     ResponseType.Assignment>;
 
-  export type ListAssignment = API<
+  export type ListAssignments = API<
     "/api/v1/courses/:course_id/assignments",
     {course_id: number},
     "GET",
     AssignmentParam,
     ResponseType.Assignment[]>;
 
-  export type ListAssignmentByAssignmentGroup = API<
+  export type ListAssignmentsByAssignmentGroup = API<
     "/api/v1/courses/:course_id/assignment_groups/:assignment_group_id/assignments",
     {course_id: number, assignment_group_id: number},
     "GET",
     AssignmentParam,
     ResponseType.Assignment[]>;
 
-  export type ListAssignmentForUser = API<
+  export type ListAssignmensByUser = API<
     "/api/v1/users/:user_id/courses/:course_id/assignments",
     {user_id: number | "self", course_id: number},
     "GET",
@@ -1259,7 +1260,7 @@ export namespace AssigmentAPI {
   export type EditAnAssignment = API<
     "/api/v1/courses/:course_id/assignments/:id",
     {course_id: number, id: number},
-    "POST",
+    "PUT",
     Partial<
       {
         notify_of_update: boolean,
@@ -1400,3 +1401,48 @@ export namespace RoleAPI {
     ResponseType.Role>;
 }
 
+
+export namespace SearchAPI {
+  export type FindRecipients = API<
+    "/api/v1/conversations/find_recipients",
+    {},
+    "GET",
+    Partial<{
+      search: string,
+      context: string,
+      exclude: string[],
+      type: "user" | "context",
+      user_id: number,
+      from_conversation_id: number,
+      permisions: Permission[],
+    }>,
+    {
+      id: string | number,
+      name: string,
+      type: "context",
+      user_count: number,
+    } |
+    {
+      id: string | number,
+      name: string,
+      full_name: string,
+      common_courses: any[],
+      common_groups: any[],
+    }[]>;
+
+  export type ListAllCourses = API<
+    "/api/v1/search/all_courses",
+    {},
+    "GET",
+    Partial<{
+      search: string,
+      public_only: boolean,
+      open_enrollment_only: boolean,
+    }>,
+    ResponseType.Course[]>;
+}
+
+
+export namespace Submission {
+
+}
