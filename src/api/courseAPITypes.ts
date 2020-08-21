@@ -32,11 +32,11 @@ export type ListMyCourses = API<
     enrollment_state: "active" | "invited_or_pending" | "completed",
     exclude_blueprint_courses: boolean,
     include: Include
-    state:
-    | "unpublished"
-    | "available"
-    | "completed"
-    | "deleted"
+    state: (
+      | "unpublished"
+      | "available"
+      | "completed"
+      | "deleted")[]
   }>,
   ResponseType.Course[]>;
 
@@ -47,11 +47,12 @@ export type ListCoursesByAUser = API<
   Partial<{
     enrollment_state: "active" | "invited_or_pending" | "completed",
     include: Include,
-    state:
-    | "unpublished"
-    | "available"
-    | "completed"
-    | "deleted"
+    state: (
+      | "unpublished"
+      | "available"
+      | "completed"
+      | "deleted"
+    )[]
   }>,
   ResponseType.Course[]>;
 
