@@ -47,4 +47,5 @@ psd
 thumb
 sketh
 
+tmpTestDir/*
 # End of https://www.toptal.com/developers/gitignore/api/reactc

@@ -3,7 +3,7 @@ A typed api wrapper for canvas lms api.
 
 There is an set of low level interface provides full control over the canvas restful endpoints, and a high level interface that makes things easier.
 
-* This api is in it's early age, more apis and tests will be added later one. Once it is stable it will be a npm package.
+* This api is in it's early age, more apis and tests will be added later one. It will be stable when it reaches 1.0.0.
 
 The most frustrated part of using apis is probably being not sure about what parameter to send and what kind of value the api will response. It can sometimes take hours of trails and errors just to understand what an api does.
 
@@ -74,6 +74,8 @@ If you are using tsserver, most values in the parameters are super narrowed type
 
 ## Currently Supported APIs
 - Account
+- Assignment
+- Progress
 - File
 - File Upload
 - Announcement
