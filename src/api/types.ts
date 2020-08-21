@@ -1,5 +1,6 @@
 import {HTTPMethod} from '../request/types';
 import {ResponseType} from './responseTypes';
+import {Permission} from './permissionTypes';
 import {
   DateString,
   MIMETypeString,
@@ -241,28 +242,28 @@ export namespace FilesAPI {
       order: "asc" | "desc",
     };
 
-    export type GetCourseList = API<
+    export type Course = API<
       "/api/v1/courses/:course_id/files",
       {course_id: number},
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
 
-    export type GetUserList = API<
+    export type User = API<
       "/api/v1/users/:user_id/files",
       {user_id: number | "self"},
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
 
-    export type GetGroupList = API<
+    export type Group = API<
       "/api/v1/groups/:group_id/files",
       {group_id: number},
       "GET",
       Partial<ListParam>,
       ResponseType.File[]>;
 
-    export type GetFolderList = API<
+    export type Folder = API<
       "/api/v1/folders/:id/files",
       {id: number},
       "GET",
@@ -720,6 +721,39 @@ export namespace ConversationsAPI {
     }>,
     {}>;
 
+  export type DeleteAConversation = API<
+    "/api/v1/conversations/:id",
+    {id: number},
+    "DELETE",
+    {},
+    {
+      id: number,
+      subject: string,
+      workflow_state: "unread" | "read" | "archived"
+      last_message?: string,
+      last_message_at?: DateString,
+      message_count: number,
+      subscribed: boolean,
+      private: boolean,
+      starred: boolean,
+      properties: ("last_author" | "attachments" | "media_objects")[]
+    }>;
+
+  export type BatchUpdateConversations = API<
+    "/api/v1/conversations",
+    {},
+    "PUT",
+    {
+      conversation_ids: string[],
+      event: (
+        | "mark_as_read"
+        | "mark_as_unread"
+        | "star" | "unstar" | "archive"
+        | "destroy"
+      )[]
+    },
+    ResponseType.Progress>;
+
   export type UnreadCount = API<
     "/api/v1/conversations/unread_count",
     {},
@@ -761,7 +795,7 @@ export namespace CoursesAPI {
     }>,
     ResponseType.Course[]>;
 
-  export type ListCoursesForAUser = API<
+  export type ListCoursesByAUser = API<
     "/api/v1/users/:user_id/courses",
     {user_id: number | "self"},
     "GET",
@@ -969,11 +1003,11 @@ export namespace CoursesAPI {
       }
     }>;
 
-  export type Permission = API<
+  export type GetPermission = API<
     "/api/v1/courses/:course_id/permissions",
     {course_id: number},
     "GET",
-    Partial<{permissions: string}>,
+    Partial<{permissions: Permission[]}>,
     {[permissions: string]: string}>;
 }
 
@@ -1119,7 +1153,7 @@ export namespace UserAPI {
     ResponseType.PageView[]>;
 }
 
-export namespace Progress {
+export namespace ProgressAPI {
   export type Query = API<
     "/api/v1/progress/:id",
     {id: number | "self"},
@@ -1127,73 +1161,242 @@ export namespace Progress {
     {},
     ResponseType.Progress>;
 
-  export namespace Assigment {
-    type AssignmentParam = Partial<{
+}
+
+export namespace AssigmentAPI {
+  type AssignmentParam = Partial<{
+    include: (
+      | "submission"
+      | "assignment_visibility"
+      | "all_dates"
+      | "overrides"
+      | "observed_users"
+      | "can_edit")[],
+    search_term: string,
+    override_assignment_dates: boolean,
+    needs_grading_count_by_section: boolean,
+    bucket:
+    | "past" | "overdue" | "undated" | "ungraded" | "unsubmitted"
+    | "upcoming" | "future",
+    assignment_ids: string[],
+    order_by: "position" | "name" | "due_at",
+    post_to_sis: boolean
+  }>
+  export type DeleteAnAssignment = API<
+    "/api/v1/courses/:course_id/assignments/:id",
+    {course_id: number, id: number},
+    "DELETE",
+    {},
+    ResponseType.Assignment>;
+
+  export type ListAssignment = API<
+    "/api/v1/courses/:course_id/assignments",
+    {course_id: number},
+    "GET",
+    AssignmentParam,
+    ResponseType.Assignment[]>;
+
+  export type ListAssignmentByAssignmentGroup = API<
+    "/api/v1/courses/:course_id/assignment_groups/:assignment_group_id/assignments",
+    {course_id: number, assignment_group_id: number},
+    "GET",
+    AssignmentParam,
+    ResponseType.Assignment[]>;
+
+  export type ListAssignmentForUser = API<
+    "/api/v1/users/:user_id/courses/:course_id/assignments",
+    {user_id: number | "self", course_id: number},
+    "GET",
+    AssignmentParam,
+    ResponseType.Assignment[]>;
+
+  export type AnAssignmet = API<
+    "/api/v1/courses/:course_id/assignments/:id",
+    {course_id: number, id: number},
+    "GET",
+    Partial<{
       include: (
-        | "submission"
-        | "assignment_visibility"
-        | "all_dates"
-        | "overrides"
-        | "observed_users"
-        | "can_edit")[],
-      search_term: string,
+        | "submission" | "assignment_visibility" | "overrides"
+        | "observed_users" | "can_edit")[],
       override_assignment_dates: boolean,
       needs_grading_count_by_section: boolean,
-      bucket:
-      | "past" | "overdue" | "undated" | "ungraded" | "unsubmitted"
-      | "upcoming" | "future",
-      assignment_ids: string[],
-      order_by: "position" | "name" | "due_at",
-      post_to_sis: boolean
-    }>
-    export type DeleteAnAssignment = API<
-      "/api/v1/courses/:course_id/assignments/:id",
-      {course_id: number, id: number},
-      "DELETE",
-      {},
-      ResponseType.Assignment>;
+      all_dates: boolean,
+    }>,
+    ResponseType.Assignment>;
 
-    export type ListAssignment = API<
-      "/api/v1/courses/:course_id/assignments",
-      {course_id: number},
-      "GET",
-      AssignmentParam,
-      ResponseType.Assignment[]>;
+  export type CreateNewAssignment = API<
+    "/api/v1/courses/:course_id/assignments",
+    {course_id: number},
+    "POST",
+    Partial<
+      {
+        notify_of_update: boolean,
+        assignment_overrides: ResponseType.AssignmentOverride[],
+        quiz_lti: boolean,
+        assignment_group_id: number,
+      } &
 
-    export type ListAssignmentByAssignmentGroup = API<
-      "/api/v1/courses/:course_id/assignment_groups/:assignment_group_id/assignments",
-      {course_id: number, assignment_group_id: number},
-      "GET",
-      AssignmentParam,
-      ResponseType.Assignment[]>;
+      Pick<ResponseType.Assignment,
+        | "name" | "position" | "submission_types" | "allowed_attempts"
+        | "turnitin_enabled" | "vericite_enabled" | "turnitin_settings"
+        | "integration_data"
 
-    export type ListAssignmentForUser = API<
-      "/api/v1/users/:user_id/courses/:course_id/assignments",
-      {user_id: number | "self", course_id: number},
-      "GET",
-      AssignmentParam,
-      ResponseType.Assignment[]>;
+        | "integration_id" | "peer_reviews"
+        | "automatic_peer_reviews"
+        | "group_category_id"
 
-    export type AnAssignmet = API<
-      "/api/v1/courses/:course_id/assignments/:id",
-      {course_id: number, id: number},
-      "GET",
-      Partial<{
-        include: (
-          | "submission" | "assignment_visibility" | "overrides"
-          | "observed_users" | "can_edit")[],
-        override_assignment_dates: boolean,
-        needs_grading_count_by_section: boolean,
-        all_dates: boolean,
-      }>,
-      ResponseType.Assignment>;
+        | "grade_group_students_individually" | "external_tool_tag_attributes"
+        | "points_possible" | "grading_type" | "due_at" | "lock_at"
+        | "unlock_at" | "description"
+        | "only_visible_to_overrides" | "published" | "grading_standard_id"
+        | "omit_from_final_grade" | "moderated_grading" | "grader_count"
+        | "final_grader_id" | "grader_comments_visible_to_graders"
+        | "graders_anonymous_to_graders"
+        | "grader_names_visible_to_final_grader"
+        | "anonymous_grading">>,
+    ResponseType.Assignment>;
 
-    export type CreateNewAssignment = API<
-      "/api/v1/courses/:course_id/assignments",
-      {course_id: number},
-      "POST",
-      {},
-      ResponseType.Assignment>;
+  export type EditAnAssignment = API<
+    "/api/v1/courses/:course_id/assignments/:id",
+    {course_id: number, id: number},
+    "POST",
+    Partial<
+      {
+        notify_of_update: boolean,
+        assignment_overrides: ResponseType.AssignmentOverride[],
+        assignment_group_id: number,
+        sis_assignment_id: string,
+      } &
 
-  }
+      Pick<ResponseType.Assignment,
+        | "name" | "position" | "submission_types" | "allowed_attempts"
+        | "turnitin_enabled" | "vericite_enabled" | "turnitin_settings"
+        | "integration_data" | "integration_id" | "peer_reviews"
+        | "automatic_peer_reviews"
+        | "group_category_id"
+        | "grade_group_students_individually" | "external_tool_tag_attributes"
+        | "points_possible" | "grading_type" | "due_at" | "lock_at"
+        | "unlock_at" | "description"
+        | "only_visible_to_overrides" | "published" | "grading_standard_id"
+        | "omit_from_final_grade" | "moderated_grading" | "grader_count"
+        | "final_grader_id" | "grader_comments_visible_to_graders"
+        | "graders_anonymous_to_graders"
+        | "grader_names_visible_to_final_grader"
+        | "anonymous_grading">>,
+    ResponseType.Assignment>;
+
+  export type ListAssigmentOverrides = API<
+    "/api/v1/courses/:course_id/assignments/:assignment_id/overrides",
+    {course_id: number, assignment_id: number},
+    "GET",
+    {},
+    ResponseType.AssignmentOverride[]>;
+
+  export type GetAnAssignmentOverride = API<
+    "/api/v1/courses/:course_id/assignments/:assignment_id/overrides/:id",
+    {course_id: number, assignment_id: number, overrides: number},
+    "GET",
+    {},
+    ResponseType.AssignmentOverride>;
+
+  export type CreateAnAssignmentOverride = API<
+    "/api/v1/courses/:course_id/assignments/:assignment_id/overrides",
+    {course_id: number, assignment_id: number},
+    "POST",
+    Partial<
+      Pick<ResponseType.AssignmentOverride,
+        | "student_ids"
+        | "title"
+        | "group_id"
+        | "course_section_id"
+
+        | "due_at"
+        | "unlock_at"
+        | "lock_at">>,
+    ResponseType.AssignmentOverride>;
+
+  export type UpdateAnAssignmentOverride = API<
+    "/api/v1/courses/:course_id/assignments/:assignment_id/overrides/:id",
+    {course_id: number, assignment_id: number, id: number},
+    "PUT",
+    Partial<
+      Pick<ResponseType.AssignmentOverride,
+        "student_ids" | "title" | "due_at" | "unlock_at" | "lock_at">>,
+    ResponseType.AssignmentOverride>;
+
+  export type DeleteAnAssignmentOverride = API<
+    "/api/v1/courses/:course_id/assignments/:assignment_id/overrides/:id",
+    {course_id: number, assignment_id: number, id: number},
+    "DELETE",
+    {},
+    ResponseType.AssignmentOverride>;
 }
+
+export namespace RoleAPI {
+
+  export type ListRoles = API<
+    "/api/v1/accounts/:account_id/roles",
+    {account_id: number},
+    "GET",
+    {account_id: string} &
+    Partial<{
+      state: ("active" | "inactive")[],
+      show_inherited: boolean,
+    }>,
+    ResponseType.Role>;
+
+  export type GetASingleRole = API<
+    "/api/v1/accounts/:account_id/roles/:id",
+    {account_id: number, id: number},
+    "GET",
+    {account_id: string, role_id: number} &
+    Partial<{role: string}>,
+    ResponseType.Role>;
+
+  export type CreateANewRole = API<
+    "/api/v1/accounts/:account_id/roles",
+    {account_id: string},
+    "POST",
+    Pick<ResponseType.Role, "label"> &
+    Partial<
+      Pick<ResponseType.Role,
+        | "role" | "base_role_type"> &
+      Record<Permission,
+        {
+          explicit: boolean,
+          enabled: boolean,
+          locked: boolean,
+          applies_to_self: boolean,
+          applies_to_descendants: boolean,
+        }>>
+    ,
+    ResponseType.Role>;
+
+  export type DeactivateARole = API<
+    "/api/v1/accounts/:account_id/roles/:id",
+    {account_id: number, id: number},
+    "DELETE",
+    {role_id: number} &
+    Partial<{role: string}>,
+    ResponseType.Role>;
+
+  export type ActivateARole = API<
+    "/api/v1/accounts/:account_id/roles/:id/activate",
+    {account_id: number, id: number},
+    "POST",
+    {role_id: number},
+    ResponseType.Role>;
+
+  export type UploadARole = API<
+    "/api/v1/accounts/:account_id/roles/:id",
+    {account_id: number, id: number},
+    "PUT",
+    Partial<Record<ResponseType.Enrollment["type"] & string, {
+      explicit: boolean,
+      enabled: boolean,
+      applies_to_self: boolean,
+      applies_to_descendants: boolean,
+    }>>,
+    ResponseType.Role>;
+}
+

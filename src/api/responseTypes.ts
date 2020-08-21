@@ -1563,7 +1563,7 @@ export namespace ResponseType {
 
     // the IDs of the override's target students (present if the override targets an
     // ad-hoc set of students)
-    student_is: number[],
+    student_ids: number[],
 
     // the ID of the override's target group (present if the override targets a
     // group and the assignment is a group assignment)
@@ -1720,6 +1720,87 @@ export namespace ResponseType {
     // The date this submission was posted to the student, or nil if it has not been
     // posted.
     posted_at: DateString,
+  }
+
+  export interface RolePermissions {
+    // Whether the role has the permission
+    enabled: boolean,
+
+    // Whether the permission is locked by this role
+    locked: boolean,
+
+    // Whether the permission applies to the account this role is in. Only present
+    // if enabled is true
+    applies_to_self: boolean,
+
+    // Whether the permission cascades down to sub accounts of the account this role
+    // is in. Only present if enabled is true
+    applies_to_descendants: boolean,
+
+    // Whether the permission can be modified in this role (i.e. whether the
+    // permission is locked by an upstream role).
+    readonly: boolean,
+
+    // Whether the value of enabled is specified explicitly by this role, or
+    // inherited from an upstream role.
+    explicit: boolean,
+
+    // The value that would have been inherited from upstream if the role had not
+    // explicitly set a value. Only present if explicit is true.
+    prior_default: boolean
+  }
+
+  export interface Role {
+    // The label of the role.
+    label: string,
+
+    // The label of the role. (Deprecated alias for 'label')
+    role: string,
+    // The role type that is being used as a base for this role. For account-level
+    // roles, this is 'AccountMembership'. For course-level roles, it is an
+    // enrollment type.
+    base_role_type: "AccountMembership" | Enrollment["type"],
+    // JSON representation of the account the role is in.
+    //
+    account: {
+      id: number,
+      name: string,
+      parent_account_id: number,
+      root_account_id: number,
+      sis_account_id: string
+    },
+    // The state of the role: 'active', 'inactive', or 'built_in'
+    workflow_state: "active" | "inactive" | "built_in",
+    // A dictionary of permissions keyed by name (see permissions input parameter in
+    // the 'Create a role' API).
+    permissions: {
+      read_course_content: {
+        enabled: boolean,
+        locked: boolean,
+        readonly: boolean,
+        explicit: boolean,
+        prior_default: boolean
+      },
+      read_course_list: {
+        enabled: boolean,
+        locked: boolean,
+        readonly: boolean,
+        explicit: boolean
+      },
+      read_question_banks: {
+        enabled: boolean,
+        locked: boolean,
+        readonly: boolean,
+        explicit: boolean,
+        prior_default: boolean
+      },
+      read_reports: {
+        enabled: boolean,
+        locked: boolean,
+        readonly: boolean,
+        explicit: boolean
+      }
+    }
   }
 
 }

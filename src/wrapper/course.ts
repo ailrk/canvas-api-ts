@@ -1,5 +1,6 @@
 import {CoursesAPI as C} from '../api/types';
 import {canvas, Match} from '../request/requestBuidler';
+import {Permission} from '../api/permissionTypes';
 
 
 export async function createCourse(
@@ -33,16 +34,14 @@ export async function getCourse(
 export async function getCourses(
   param: Match<C.ListMyCourses, "param">
 ): Promise<Match<C.ListMyCourses, "response">>
-
 export async function getCourses(
-  param: Match<C.ListCoursesForAUser, "param">,
+  param: Match<C.ListCoursesByAUser, "param">,
   userId: number | "self"
-): Promise<Match<C.ListCoursesForAUser, "response">>
-
+): Promise<Match<C.ListCoursesByAUser, "response">>
 export async function getCourses(
   param:
     | Match<C.ListMyCourses, "param">
-    | Match<C.ListCoursesForAUser, "param">,
+    | Match<C.ListCoursesByAUser, "param">,
   userId?: number | "self"
 ) {
   if (userId === undefined) {
@@ -52,7 +51,7 @@ export async function getCourses(
       param,
     });
   } else {
-    return canvas<C.ListCoursesForAUser>({
+    return canvas<C.ListCoursesByAUser>({
       uri: "/api/v1/users/:user_id/courses",
       uriParams: {user_id: userId},
       method: "GET",
@@ -61,11 +60,10 @@ export async function getCourses(
   }
 }
 
-export async function getCourseByUser(
-  userId: Match<C.ListCoursesForAUser, "uriParams">["user_id"],
-  config: Match<C.ListCoursesForAUser, "param">,
+export async function getCourseByUser(userId: Match<C.ListCoursesByAUser, "uriParams">["user_id"],
+  config: Match<C.ListCoursesByAUser, "param">,
 ) {
-  return canvas<C.ListCoursesForAUser>({
+  return canvas<C.ListCoursesByAUser>({
     uri: "/api/v1/users/:user_id/courses",
     uriParams: {user_id: userId},
     method: "GET",
@@ -88,5 +86,40 @@ export async function getUsersInCourse(
     uriParams: {course_id: courseId},
     method: "GET",
     param: config,
+  });
+}
+
+export async function getStudentsInCourse(
+  courseId: Match<C.ListStudents, "uriParams">["course_id"],
+) {
+  return canvas<C.ListStudents>({
+    uri: "/api/v1/courses/:course_id/students",
+    uriParams: {course_id: courseId},
+    method: "GET",
+    param: {},
+  });
+}
+
+export async function getCourseEffectiveDueDates(
+  courseId: Match<C.GetEffectiveDueDates, "uriParams">["course_id"],
+  config: Match<C.GetEffectiveDueDates, "param">,
+) {
+  return canvas<C.GetEffectiveDueDates>({
+    uri: "/api/v1/courses/:course_id/effective_due_dates",
+    uriParams: {course_id: courseId},
+    method: "GET",
+    param: config,
+  });
+}
+
+export async function getCoursePermission(
+  courseId: Match<C.GetPermission, "uriParams">["course_id"],
+  permissions: Permission[],
+) {
+  return canvas<C.GetPermission>({
+    uri: "/api/v1/courses/:course_id/permissions",
+    uriParams: {course_id: courseId},
+    method: "GET",
+    param: {permissions, },
   });
 }

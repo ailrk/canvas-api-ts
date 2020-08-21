@@ -93,13 +93,12 @@ export async function* fetchFiles(files: ResponseType.File[]) {
  */
 export async function* fetchAllFromAFolder(
   folder: ResponseType.Folder,
-  config: Match<F.List.GetFolderList, "param">,
+  config: Match<F.List.Folder, "param">,
 ) {
   const {id} = folder;
   const files = await getFilesOfAFolder(id, config);
   yield* fetchFiles(files);
 }
-
 
 export async function getFile(
   fileId: Match<F.GetFile.GetFile, "uriParams">["id"],
@@ -149,10 +148,10 @@ export async function getUserFileQuota(
 export const getQuota = getUserFileQuota;
 
 export async function getCourseFiles(
-  courseId: Match<F.List.GetCourseList, "uriParams">["course_id"],
-  config: Match<F.List.GetCourseList, "param">,
+  courseId: Match<F.List.Course, "uriParams">["course_id"],
+  config: Match<F.List.Course, "param">,
 ) {
-  return canvas<F.List.GetCourseList>({
+  return canvas<F.List.Course>({
     uri: "/api/v1/courses/:course_id/files",
     uriParams: {course_id: courseId},
     method: "GET",
@@ -161,10 +160,10 @@ export async function getCourseFiles(
 }
 
 export async function getUserFiles(
-  userId: Match<F.List.GetUserList, "uriParams">["user_id"],
-  config: Match<F.List.GetUserList, "param">,
+  userId: Match<F.List.User, "uriParams">["user_id"],
+  config: Match<F.List.User, "param">,
 ) {
-  return canvas<F.List.GetUserList>({
+  return canvas<F.List.User>({
     uri: "/api/v1/users/:user_id/files",
     uriParams: {user_id: userId},
     method: "GET",
@@ -173,13 +172,13 @@ export async function getUserFiles(
 }
 
 export const getFiles =
-  (config: Match<F.List.GetUserList, "param">) => getUserFiles("self", config)
+  (config: Match<F.List.User, "param">) => getUserFiles("self", config)
 
 export async function getGroupFiles(
-  groupId: Match<F.List.GetGroupList, "uriParams">["group_id"],
-  config: Match<F.List.GetGroupList, "param">,
+  groupId: Match<F.List.Group, "uriParams">["group_id"],
+  config: Match<F.List.Group, "param">,
 ) {
-  return canvas<F.List.GetGroupList>({
+  return canvas<F.List.Group>({
     uri: "/api/v1/groups/:group_id/files",
     uriParams: {group_id: groupId},
     method: "GET",
@@ -188,10 +187,10 @@ export async function getGroupFiles(
 }
 
 export async function getFilesOfAFolder(
-  folderId: Match<F.List.GetFolderList, "uriParams">["id"],
-  config: Match<F.List.GetFolderList, "param">,
+  folderId: Match<F.List.Folder, "uriParams">["id"],
+  config: Match<F.List.Folder, "param">,
 ) {
-  return canvas<F.List.GetFolderList>({
+  return canvas<F.List.Folder>({
     uri: "/api/v1/folders/:id/files",
     uriParams: {id: folderId},
     method: "GET",

@@ -2,12 +2,34 @@ import {UserAPI as U} from '../api/types';
 import {canvas, Match} from '../request/requestBuidler';
 
 
-export async function getUserSelf() {
+export async function getSelf() {
   return canvas<U.ShowUserDetail>({
     uri: "/api/v1/users/:id",
     uriParams: {id: "self"},
     method: "GET",
     param: {include: ["uudi", "last_login"]}
+  })
+}
+
+export async function getUser(
+  userId: Match<U.ShowUserDetail, "uriParams">["id"],
+) {
+  return canvas<U.ShowUserDetail>({
+    uri: "/api/v1/users/:id",
+    uriParams: {id: userId},
+    method: "GET",
+    param: {include: ["uudi", "last_login"]}
+  })
+}
+
+export async function getUserProfile(
+  userId: Match<U.GetUesrProfile, "uriParams">["user_id"]
+) {
+  return canvas<U.GetUesrProfile>({
+    uri: "/api/v1/users/:user_id/profile",
+    uriParams: {user_id: userId},
+    method: "GET",
+    param: {}
   })
 }
 
