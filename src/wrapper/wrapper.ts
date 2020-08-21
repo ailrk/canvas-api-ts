@@ -1,9 +1,9 @@
-export * from './account';
-export * from './course';
-export * from './user';
-export * from './uploadPolicy';
-export * from './file';
-export * from './progress';
-export * from './announcement';
-export * from './assignment';
-export * from './conversation';
+export * as Account from './account';
+export * as Course from './course';
+export * as User from './user';
+export * as UploadPolicy from './uploadPolicy';
+export * as File from './file';
+export * as Progress from './progress';
+export * as Announcement from './announcement';
+export * as Assignment from './assignment';
+export * as Conversation from './conversation';

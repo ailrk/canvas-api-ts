@@ -1,4 +1,4 @@
-import {file} from '../src/wrapper/file';
+import {File} from '../src/index';
 import fs from 'fs';
 import {promisify} from 'util';
 
@@ -17,9 +17,9 @@ describe("Test file api", () => {
   })
 
   it("should download one file", async done => {
-    const files = await file.getFiles({});
-    const stream = await file.fetchFile(files[0]);
-    await file.store(testDir, stream);
+    const files = await File.getFiles({});
+    const stream = await File.fetchFile(files[0]);
+    await File.store(testDir, stream);
     const filename = `${testDir}/${stream.filename}`
     expect(await promisify(fs.exists)(filename)).toBe(true);
     done();
@@ -28,12 +28,12 @@ describe("Test file api", () => {
   // this test takes very long time.
   jest.setTimeout(30000);
   it.skip("should download first 3 files, stop in 30000 timeout", async done => {
-    const files = await file.getFiles({});
+    const files = await File.getFiles({});
 
-    const streams = file.fetchFiles(files.slice(0, 3));
+    const streams = File.fetchFiles(files.slice(0, 3));
     for await (const stream of streams) {
       try {
-        await file.store(testDir, stream);
+        await File.store(testDir, stream);
         const filename = `${testDir}/${stream.filename}`;
         expect(await promisify(fs.exists)(filename)).toBe(true);
         await (promisify(fs.unlink)(filename));

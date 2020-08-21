@@ -1,16 +1,13 @@
-import {Progress as P} from '../api/types';
+import * as P from '../api/progreassAPITypes';
 import {canvas, Match} from '../request/requestBuidler';
 
-export namespace progress {
 
-  export async function getProgress(
-    id: Match<P.Query, "uriParams">["id"]) {
-    return canvas<P.Query>({
-      uri: "/api/v1/progress/:id",
-      uriParams: {id},
-      method: "GET",
-      param: {}
-    });
-  }
-
+export async function getProgress(
+  id: Match<P.Progress, "uriParams">["id"]) {
+  return canvas<P.Progress>({
+    uri: "/api/v1/progress/:id",
+    uriParams: {id},
+    method: "GET",
+    param: {}
+  });
 }

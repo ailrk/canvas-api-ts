@@ -1,6 +1,6 @@
 // Named export
 export * as API from './api/types';
-export {ResponseType} from './api/responseTypes';
+export * as ResponseType from './api/responseTypes';
 
 // In one namespace
 export * from './api/aliases';
