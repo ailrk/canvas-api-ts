@@ -39,6 +39,6 @@ export type Confirm = API<
     szie: number,
   }>;
 
-export namespace FileUploadViaURL {
+export declare namespace FileUploadViaURL {
   // TODO
 }

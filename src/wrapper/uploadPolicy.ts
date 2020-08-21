@@ -18,7 +18,6 @@ import {URLString} from '../api/aliases';
  * @return a Promise of confirmed response from canvas server.
  */
 
-
 export async function uploadAFile(
   folderId: Match<F.UploadAFile, "uriParams">["folder_id"],
   fileContent: ArrayBuffer,
@@ -33,6 +32,7 @@ export async function uploadAFile(
   const confirmedMsg = await fileUploadConfirm(confirmUrl);
   return confirmedMsg;
 }
+
 
 /**
  * post bianry value

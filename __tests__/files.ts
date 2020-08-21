@@ -43,14 +43,13 @@ describe.skip("Test file api that requires tmp directory", () => {
     }
     done();
   });
-
 })
 
 describe("Test file api with timeout limit", () => {
   // this is my own file. More robust test is required.
   it("should get all files of a course", async done => {
     let flag = false;
-    setTimeout(() => { flag = true; }, 5000);
+    setTimeout(() => {flag = true;}, 5000);
     const folders = await File.getUserFolders("self");
     const COSC221 = folders.filter(e => e.name.startsWith("COSC 211"))[0];
 
@@ -66,5 +65,4 @@ describe("Test file api with timeout limit", () => {
     expect(typeof files.length === "number").toBe(true);
     done();
   });
-
 })

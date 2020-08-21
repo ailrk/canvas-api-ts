@@ -9,7 +9,7 @@ import {
 
 // API for files
 // https://canvas.instructure.com/doc/api/files.html
-export namespace Quota {
+export declare namespace Quota {
   export type GetCourseQuota = API<
     "/api/v1/courses/:course_id/files/quota",
     {course_id: number},
@@ -32,7 +32,7 @@ export namespace Quota {
     {quota: number, quota_used: number}>;
 }
 
-export namespace List {
+export declare namespace List {
   type ListParam = {
     content_type: MIMETypeString[],
     exclude_content_types: MIMETypeString[],
@@ -78,7 +78,7 @@ export namespace List {
     ResponseType.File[]>;
 }
 
-export namespace GetFile {
+export declare namespace GetFile {
   export type GetFile = API<
     "/api/v1/files/:id",
     {id: number},
@@ -151,7 +151,7 @@ export type ListFolders = API<
   {},
   ResponseType.Folder>;
 
-export namespace ListAllFolders {
+export declare namespace ListAllFolders {
   export type ListCourseFolders = API<
     "/api/v1/courses/:course_id/folders",
     {course_id: number},
@@ -174,7 +174,7 @@ export namespace ListAllFolders {
     ResponseType.Folder[]>;
 }
 
-export namespace ResolvePath {
+export declare namespace ResolvePath {
   export type Course = API<
     "/api/v1/courses/:course_id/folders/by_path/*full_path",
     {course_id: number, full_path: string | ""},
@@ -197,7 +197,7 @@ export namespace ResolvePath {
     ResponseType.Folder[]>;
 }
 
-export namespace GetFoler {
+export declare namespace GetFoler {
   export type Course = API<
     "/api/v1/courses/:course_id/folders/:id",
     {course_id: number, id: string},
@@ -242,7 +242,7 @@ export type UpdateFoler = API<
   }>,
   ResponseType.Folder>;
 
-export namespace CreateFoler {
+export declare namespace CreateFoler {
   type CreateFolerParam = {
     name: string,
   } & Partial<{
@@ -338,7 +338,7 @@ export type CopyAFolder = API<
   {source_file_id: string},
   ResponseType.Folder>;
 
-export namespace GetUploadedMediaFolderForUser {
+export declare namespace GetUploadedMediaFolderForUser {
   export type Course = API<
     "/api/v1/courses/:course_id/folders/media",
     {course_id: number},
@@ -354,7 +354,7 @@ export namespace GetUploadedMediaFolderForUser {
     ResponseType.Folder>;
 }
 
-export namespace SetUsageRights {
+export declare namespace SetUsageRights {
   type SetUsageRightsParam = {file_ids: string[]}
     & Partial<{
       folder_ids: string[],
@@ -388,7 +388,7 @@ export namespace SetUsageRights {
     ResponseType.UsageRights>;
 }
 
-export namespace RemoveUsageRights {
+export declare namespace RemoveUsageRights {
   type RemoveUsageRightsParam =
     {file_ids: string[]} &
     Partial<{

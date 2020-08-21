@@ -33,33 +33,25 @@ export async function getCourse(
 
 export async function getCourses(
   param: Match<C.ListMyCourses, "param">
-): Promise<Match<C.ListMyCourses, "response">>
-export async function getCourses(
-  param: Match<C.ListCoursesByAUser, "param">,
-  userId: number | "self"
-): Promise<Match<C.ListCoursesByAUser, "response">>
-export async function getCourses(
-  param:
-    | Match<C.ListMyCourses, "param">
-    | Match<C.ListCoursesByAUser, "param">,
-  userId?: number | "self"
 ) {
-  if (userId === undefined) {
-    return canvas<C.ListMyCourses>({
-      uri: "/api/v1/courses",
-      method: "GET",
-      param,
-    });
-  } else {
-    return canvas<C.ListCoursesByAUser>({
-      uri: "/api/v1/users/:user_id/courses",
-      uriParams: {user_id: userId},
-      method: "GET",
-      param,
-    })
-  }
+  return canvas<C.ListMyCourses>({
+    uri: "/api/v1/courses",
+    method: "GET",
+    param,
+  });
 }
 
+export async function getCoursesByUser(
+  param: Match<C.ListCoursesByAUser, "param">,
+  userId: number | "self"
+) {
+  return canvas<C.ListCoursesByAUser>({
+    uri: "/api/v1/users/:user_id/courses",
+    uriParams: {user_id: userId},
+    method: "GET",
+    param,
+  })
+}
 
 export async function getCourseByUser(userId: Match<C.ListCoursesByAUser, "uriParams">["user_id"],
   config: Match<C.ListCoursesByAUser, "param">,
