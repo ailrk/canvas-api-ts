@@ -37,7 +37,7 @@ export async function getCoursesInAccount(
   courseOption: Match<C.ListCoursesByAUser, "param">,
 ) {
   const accounts = await getSubAccount(accountId);
-  const courses = await Promise.all(accounts.map(e => Course.getCoursesByUser(courseOption, e.id)));
+  const courses = await Promise.all(accounts.map(e => Course.getCoursesByUser(e.id, courseOption)));
   return ([] as Unpacked<typeof courses>).concat(...courses);
 }
 
