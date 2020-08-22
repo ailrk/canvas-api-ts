@@ -1,4 +1,4 @@
-import {File} from '../src/index';
+import {File, Course} from '../src/index';
 import fs from 'fs';
 import {promisify} from 'util';
 
@@ -69,11 +69,11 @@ describe.skip("Test file api with timeout limit", () => {
 
 describe("Rough test, make sure no exception", () => {
   jest.setTimeout(30000);
-  it.skip("File No Side effect", async done => {
-    const getFiles =  await File.getFiles({});
+  it("File No Side effect", async done => {
+    const getFiles = await File.getFiles({});
     const getUserFolders = await File.getUserFolders("self");
     const getQuota = await File.getQuota();
-    const getFilesOfAFolder = (async () => {
+    const getFilesOfAFolder = await (async () => {
       const folders = await File.getUserFolders("self");
       return await File.getFilesOfAFolder(folders[0].id, {});
     })();
@@ -82,6 +82,43 @@ describe("Rough test, make sure no exception", () => {
     // console.log(getUserFolders);
     // console.log(getQuota);
     // console.log(getFilesOfAFolder);
+    // console.log(getCourseFiles);
+    done();
+  });
+
+});
+
+describe("Course related", () => {
+  it("", async done => {
+    const getCourseFiles = await (async () => {
+      const course = (await Course.getCoursesByUser("self", {
+        enrollment_state: "active",
+      }))[0];
+      const file = await File.getCourseFiles(course.id, {});
+      return file;
+    })();
+    done();
+  });
+
+  it("", async done => {
+    const getCourseFolders = await (async () => {
+      const course = (await Course.getCoursesByUser("self", {
+        enrollment_state: "active",
+      }))[0];
+      const file = await File.getCourseFolders(course.id);
+      return file;
+    })();
+    done();
+  });
+
+  it("", async done => {
+    const getCourseFoldersByPath = await (async () => {
+      const course = (await Course.getCoursesByUser("self", {
+        enrollment_state: "active",
+      }))[0];
+      const folders = await File.getCourseFoldersByPath(course.id, "/")
+      return folders
+    })();
     done();
   });
 

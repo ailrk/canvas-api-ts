@@ -93,8 +93,8 @@ function uriParamsReplace(uri: string, uriParams: {[key: string]: string | numbe
         + `no parameter corresponds to ${e}.`);
 
     } else if (e.startsWith("*")) { // combine full path.
-
-      return e.slice(1).trim();
+      const cdr = e.slice(1).trim();
+      return  cdr.startsWith("/") ? cdr.slice(1) : cdr;
     }
     return e;
   }).join("/");

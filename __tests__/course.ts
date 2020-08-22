@@ -1,13 +1,20 @@
 import {Course} from '../src/wrapper/wrapper';
 
-describe.skip("Test course api", () => {
+describe("Test course api", () => {
   jest.setTimeout(20000);
   it("should get course file", async () => {
     const course = await Course.getCourseByUser("self", {
       enrollment_state: "active",
     });
-    console.log(course);
     expect(typeof course.length === "number").toBe(true);
+  });
+
+  it("should list self courses", async () => {
+    const courses = await Course.getCourses({
+      enrollment_state: "completed",
+    });
+    console.log(courses);
+    expect(typeof courses.length === "number").toBe(true);
   });
 });
 
@@ -23,8 +30,8 @@ describe("Course spamming test, test everything connect", () => {
       .getCoursePermission(
         course.id,
         ["read_forum", "manage_calendar", "view_jobs"]);
-    console.log(permission);
     // console.log(result.get("getCoursesByUser"));
+    expect(typeof permission["view_jobs"] === "boolean").toBe(true);
 
     done();
   });
