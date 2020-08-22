@@ -67,26 +67,28 @@ describe.skip("Test file api with timeout limit", () => {
   });
 });
 
-describe("File spamming test, test everything connect", () => {
+describe("Rough test, make sure no exception", () => {
   jest.setTimeout(30000);
   it.skip("File No Side effect", async done => {
-    const result = new Map();
-    result.set("getFiles", await File.getFiles({}));
-    result.set("getUserFolders", await File.getUserFolders("self"));
-    result.set("getQuota", await File.getQuota());
-    result.set("getFilesOfAFolder", (async () => {
+    const getFiles =  await File.getFiles({});
+    const getUserFolders = await File.getUserFolders("self");
+    const getQuota = await File.getQuota();
+    const getFilesOfAFolder = (async () => {
       const folders = await File.getUserFolders("self");
       return await File.getFilesOfAFolder(folders[0].id, {});
-    })());
+    })();
 
-    // console.log(result.get("getFiles"));
-    // console.log(result.get("getUserFolders"));
-    // console.log(result.get("getQuota"));
-    // console.log(result.get("getFilesOfAFolder"));
-    console.log(result.get("createFolder"));
+    // console.log(getFiles);
+    // console.log(getUserFolders);
+    // console.log(getQuota);
+    // console.log(getFilesOfAFolder);
     done();
   });
 
+});
+
+describe("Create and delete folder", () => {
+  jest.setTimeout(30000);
   it.skip("Create a file", async done => {
     const result = new Map();
 
@@ -114,7 +116,4 @@ describe("File spamming test, test everything connect", () => {
     // console.log(result.get("deleteFolder"))
     done();
   })
-
 });
-
-
