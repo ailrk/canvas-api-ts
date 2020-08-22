@@ -143,7 +143,7 @@ export async function getUserFileQuota(
   })
 }
 
-export const getQuota = getUserFileQuota;
+export const getQuota = () => getUserFileQuota("self");
 
 export async function getCourseFiles(
   courseId: Match<F.List.Course, "uriParams">["course_id"],
@@ -292,10 +292,10 @@ export async function getUserFoldersByPath(
 }
 
 export async function getFolderInCourse(
-  courseId: Match<F.GetFoler.Course, "uriParams">["course_id"],
-  folderId: Match<F.GetFoler.Course, "uriParams">["id"],
+  courseId: Match<F.GetFolder.Course, "uriParams">["course_id"],
+  folderId: Match<F.GetFolder.Course, "uriParams">["id"],
 ) {
-  return canvas<F.GetFoler.Course>({
+  return canvas<F.GetFolder.Course>({
     uri: "/api/v1/courses/:course_id/folders/:id",
     uriParams: {course_id: courseId, id: folderId},
     method: "GET",
@@ -304,10 +304,10 @@ export async function getFolderInCourse(
 }
 
 export async function getFolderOfUser(
-  userId: Match<F.GetFoler.User, "uriParams">["user_id"],
-  folderId: Match<F.GetFoler.User, "uriParams">["id"],
+  userId: Match<F.GetFolder.User, "uriParams">["user_id"],
+  folderId: Match<F.GetFolder.User, "uriParams">["id"],
 ) {
-  return canvas<F.GetFoler.User>({
+  return canvas<F.GetFolder.User>({
     uri: "/api/v1/users/:user_id/folders/:id",
     uriParams: {user_id: userId, id: folderId},
     method: "GET",
@@ -316,10 +316,10 @@ export async function getFolderOfUser(
 }
 
 export async function getFolderInGroup(
-  groupId: Match<F.GetFoler.Group, "uriParams">["group_id"],
-  folderId: Match<F.GetFoler.Group, "uriParams">["id"],
+  groupId: Match<F.GetFolder.Group, "uriParams">["group_id"],
+  folderId: Match<F.GetFolder.Group, "uriParams">["id"],
 ) {
-  return canvas<F.GetFoler.Group>({
+  return canvas<F.GetFolder.Group>({
     uri: "/api/v1/groups/:group_id/folders/:id",
     uriParams: {group_id: groupId, id: folderId},
     method: "GET",
@@ -328,10 +328,21 @@ export async function getFolderInGroup(
 }
 
 export async function getFolder(
-  folderId: Match<F.GetFoler.Folder, "uriParams">["id"],
+  folderId: Match<F.GetFolder.Folder, "uriParams">["id"],
 ) {
-  return canvas<F.GetFoler.Folder>({
+  return canvas<F.GetFolder.Folder>({
     uri: "/api/v1/folders/:id",
+    uriParams: {id: folderId},
+    method: "GET",
+    param: {},
+  });
+}
+
+export async function getFolders(
+  folderId: Match<F.ListFolders, "uriParams">["id"],
+) {
+  return canvas<F.ListFolders>({
+    uri: "/api/v1/folders/:id/folders",
     uriParams: {id: folderId},
     method: "GET",
     param: {},

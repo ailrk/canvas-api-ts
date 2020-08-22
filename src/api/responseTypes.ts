@@ -824,7 +824,7 @@ export interface Folder {
   id: number,
   folders_count: number,
   name: string,
-  parent_folder_id: number,
+  parent_folder_id: string,
   created_at: DateString,
   unlock_at?: DateString,
   hidden: boolean,

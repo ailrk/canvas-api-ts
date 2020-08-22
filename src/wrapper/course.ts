@@ -42,8 +42,8 @@ export async function getCourses(
 }
 
 export async function getCoursesByUser(
-  param: Match<C.ListCoursesByAUser, "param">,
-  userId: number | "self"
+  userId: number | "self",
+  param: Match<C.ListCoursesByAUser, "param">
 ) {
   return canvas<C.ListCoursesByAUser>({
     uri: "/api/v1/users/:user_id/courses",
@@ -108,6 +108,6 @@ export async function getCoursePermission(
     uri: "/api/v1/courses/:course_id/permissions",
     uriParams: {course_id: courseId},
     method: "GET",
-    param: {permissions, },
+    param: {permissions},
   });
 }

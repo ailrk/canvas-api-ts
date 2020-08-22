@@ -9,7 +9,6 @@ import {canvas} from '../src/request/requestBuidler';
 
 
 // test functionalities of the api.
-
 describe("Basic Test Suite, testing api functinoalities", () => {
   it("Should be able to get .env info", () => {
     const {url, token} = getAuth();

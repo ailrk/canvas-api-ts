@@ -45,7 +45,7 @@ describe.skip("Test file api that requires tmp directory", () => {
   });
 })
 
-describe("Test file api with timeout limit", () => {
+describe.skip("Test file api with timeout limit", () => {
   // this is my own file. More robust test is required.
   it("should get all files of a course", async done => {
     let flag = false;
@@ -65,4 +65,56 @@ describe("Test file api with timeout limit", () => {
     expect(typeof files.length === "number").toBe(true);
     done();
   });
-})
+});
+
+describe("File spamming test, test everything connect", () => {
+  jest.setTimeout(30000);
+  it.skip("File No Side effect", async done => {
+    const result = new Map();
+    result.set("getFiles", await File.getFiles({}));
+    result.set("getUserFolders", await File.getUserFolders("self"));
+    result.set("getQuota", await File.getQuota());
+    result.set("getFilesOfAFolder", (async () => {
+      const folders = await File.getUserFolders("self");
+      return await File.getFilesOfAFolder(folders[0].id, {});
+    })());
+
+    // console.log(result.get("getFiles"));
+    // console.log(result.get("getUserFolders"));
+    // console.log(result.get("getQuota"));
+    // console.log(result.get("getFilesOfAFolder"));
+    console.log(result.get("createFolder"));
+    done();
+  });
+
+  it.skip("Create a file", async done => {
+    const result = new Map();
+
+    result.set("createFolder", (async () => {
+      const folders = await File.getUserFolders("self");
+      const folder = folders[0];
+      return await File.createFolder(folder.id, {...folder, name: "I named it"});
+    })());
+
+    done();
+  });
+
+  it.skip("Delete a file", async done => {
+    const result = new Map();
+    result.set("deleteFolder", (async () => {
+      const folders = await File.getUserFolders("self");
+      const folder = folders[0];
+      const folderToDelete = (await File.getFolders(folder.id))
+        .filter(e => e.name === "New Folder")[0].id;
+      return await File.deleteFolder(folderToDelete, {})
+    })());
+
+    // now it return a pending promise. Need to await againg to get
+    // the value. don't know why.
+    // console.log(result.get("deleteFolder"))
+    done();
+  })
+
+});
+
+

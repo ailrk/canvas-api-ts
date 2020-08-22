@@ -149,7 +149,7 @@ export type ListFolders = API<
   {id: number},
   "GET",
   {},
-  ResponseType.Folder>;
+  ResponseType.Folder[]>;
 
 export declare namespace ListAllFolders {
   export type ListCourseFolders = API<
@@ -197,7 +197,7 @@ export declare namespace ResolvePath {
     ResponseType.Folder[]>;
 }
 
-export declare namespace GetFoler {
+export declare namespace GetFolder {
   export type Course = API<
     "/api/v1/courses/:course_id/folders/:id",
     {course_id: number, id: string},
@@ -289,7 +289,7 @@ export type DeleteFolder = API<
   {id: number},
   "DELETE",
   Partial<{force: boolean}>,
-  any>;
+  ResponseType.Folder>;
 
 export type UploadAFile = API<
   "/api/v1/folders/:folder_id/files",
