@@ -7,6 +7,7 @@ import fs from 'fs';
 import {pipeline} from 'stream';
 import path from 'path';
 import {promisify} from 'util';
+import {URLString} from 'src/api/aliases';
 
 const streamPipeline = promisify(pipeline);
 
@@ -56,6 +57,16 @@ export async function fetchFile(
   const {url, filename} = file;
   const decodedFilename = decodeURIComponent(filename);
 
+  const response = await fetchFileByUrl(url);
+
+  return {
+    ...response,
+    filename: decodedFilename,
+    meta: file,
+  }
+}
+
+export async function fetchFileByUrl(url: URLString) {
   if (!isValidURL(url)) {
     throw new Error(""
       + "file resource url get from canvas api is invalid."
@@ -68,10 +79,9 @@ export async function fetchFile(
   });
 
   return {
-    filename: decodedFilename,
-    meta: file,
     stream: response.body,
   }
+
 }
 
 /**
