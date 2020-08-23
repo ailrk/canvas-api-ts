@@ -28,7 +28,7 @@ If you want to upload your project somewhere __MAKE SURE__ the `.env` file is no
 #### High level interface
 High level interface can be used easily. Functionalities are separated into parts to enable more customizations.
 ```typescript
-import {file} from 'canvas-api-ts';
+import {File} from 'canvas-api-ts';
 
 
 // fille wil be download at the dir
@@ -60,9 +60,9 @@ main();
 #### Low level interface
 Each endpoint is reprensented as a type. call `canvas` with the corresponding type as it's type parameter to send a request. By default your token will be added into the request header. There is also
 ```typescript
-import {API, canvas} from 'canvas-api-ts';
+import {FilesAPI, canvas} from 'canvas-api-ts';
 async function foo() {
-  const result = await canvas<API.FilesAPI.Quota.GetUserQuota>({
+  const result = await canvas<FilesAPI.Quota.GetUserQuota>({
     uri: "/api/v1/users/:user_id/files/quota",
     uriParams: {user_id: "self"},
     method: "GET",
@@ -72,6 +72,7 @@ async function foo() {
   console.log(result.quota_used);
 }
 ```
+
 If you are using tsserver, most values in the parameters are super narrowed types and can be autocompleted directly. Request parameter `param` and response type are also typed.
 
 ## Convention

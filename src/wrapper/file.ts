@@ -44,6 +44,15 @@ export async function store(baseDir: string, stream: FileStream) {
   await streamPipeline(stream.stream, wstream);
 }
 
+/**
+ * @param path the path it store to.
+ * @param stream
+ */
+export async function storeByPath(filepath: string, stream: NodeJS.ReadableStream) {
+  const wstream = fs.createWriteStream(filepath);
+  await streamPipeline(stream, wstream);
+}
+
 
 /**
  * download a single file
@@ -66,7 +75,7 @@ export async function fetchFile(
   }
 }
 
-export async function fetchFileByUrl(url: URLString) {
+export async function fetchFileByUrl(url: string) {
   if (!isValidURL(url)) {
     throw new Error(""
       + "file resource url get from canvas api is invalid."

@@ -1,6 +1,6 @@
 {
   "name": "canvas-api-ts",
-  "version": "0.5.7",
+  "version": "0.5.11",
   "description": "Strongly typed canvas lms api",
   "main": "dist/index.js",
   "type": "dist/index.d.ts",
