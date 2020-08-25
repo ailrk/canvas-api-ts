@@ -11,8 +11,8 @@ export function getAuth() {
     return canvasAuthTrail;
   }
   throw new Error(""
-    + "Authentication information is not complete"
-    + "Is your .env configed correctly?");
+    + "Authentication information is not complete."
+    + " Is your .env configed correctly?");
 }
 
 function isAuth(a: Partial<Auth>): a is Auth {
