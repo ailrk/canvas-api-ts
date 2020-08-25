@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
 
 export interface Auth {
   url: string,
@@ -7,19 +6,21 @@ export interface Auth {
 }
 
 export function getAuth() {
+  dotenv.config();
+  const canvasAuthTrail: Partial<Auth> = {
+    url: process.env["CANVAS_API_URL"],
+    token: process.env["CANVAS_API_TOKEN"],
+  }
   if (isAuth(canvasAuthTrail)) {
     return canvasAuthTrail;
   }
   throw new Error(""
     + "Authentication information is not complete."
-    + " Is your .env configed correctly?");
+    + " Is your .env configured correctly?");
 }
 
 function isAuth(a: Partial<Auth>): a is Auth {
   return a.url !== undefined && a.token !== undefined;
 }
 
-const canvasAuthTrail: Partial<Auth> = {
-  url: process.env["CANVAS_API_URL"],
-  token: process.env["CANVAS_API_TOKEN"],
-}
+
